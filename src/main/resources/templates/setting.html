@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>業務報告書 設定</title>
+  <link rel="stylesheet" th:href="@{/css/reset.css}" href="../static/css/reset.css" />
+  <link rel="stylesheet" th:href="@{/css/base.css}" href="../static/css/base.css" />
+  <link rel="stylesheet" th:href="@{/css/reportForm.css}" href="../static/css/reportForm.css" />
+</head>
+
+<body>
+  <!-- 新規作成・編集画面 -->
+  <!-- <div class="modal-dialog" style="overflow: hidden;"> -->
+  <div th:fragment="reportForm" th:remove="tag">
+    <!-- 入力フォーム -->
+    <form method="post" th:action="@{/report}" action="" class="report-input-form" th:object="${reportForm}">
+      <div class="report-input-container">
+
+        <!-- ヘッダー、閉じるボタン -->
+        <header class="report-input-header">
+          <!-- <div th:text="${'(業務報告書 ' + (reportShow.showReportCreate ? '作成' : '編集') + 'フォーム)'}">入力フォーム</div> -->
+          <div th:text="${'Business Report ' + (reportShow.showReportCreate ? 'Creation' : 'Editing') + ' Form' + ' (' + (reportShow.showReportCreate ? '新規作成' : '編集') + 'フォーム)'}">入力フォーム</div>
+          <button method="post" class="close-cross-btn" id="reportFormClose" name="reportFormClose"></button>
+        </header>
+
+        <!-- フィールド -->
+        <div class="report-input-fields">
+          <!-- エラーメッセージ -->
+          <!-- <div class="report-input-field">
+            <ul>
+              <li th:each="e : ${#fields.detailedErrors()}" th:class="${e.global}? globalerr : fielderr">
+                  <span th:text="${e.global}? ${e.global} : ${e.fieldName}">The field name</span> |
+                  <span th:text="${e.message}">The error message</span>
+              </li>
+            </ul> 
+          </div> -->
+
+          <!-- 報告書ID -->
+          <div class="report-input-field">
+            <label class="labelDecorate" for="reportId">報告書ID</label>
+            <input type="text" name="reportId" id="reportId" th:field="*{reportId}" readonly>
+          </div>
+
+          <!-- フィールド：対象期間 -->
+          <div class="report-input-field">
+            <label class="labelDecorate requiredMark" for="periodStart">対象期間(開始 - 終了)</label>
+            <div class="report-input-period-field">
+              <input type="date" name="periodStart" id="periodStart"
+                th:value="${#temporals.format(reportForm.periodStart, 'yyyy-MM-dd')}" th:classappend="${#fields.hasErrors('global')} ? 'errorField' : ''">
+              <div>-</div>
+              <input type="date" name="periodEnd" id="periodEnd"
+                th:value="${#temporals.format(reportForm.periodEnd, 'yyyy-MM-dd')}" th:classappend="${#fields.hasErrors('global')} ? 'errorField' : ''">
+              <!-- <input type="date" name="periodStart" id="periodStart"
+                th:value="${#temporals.format(reportForm.periodStart, 'yyyy-MM-dd')}">
+              <div>-</div>
+              <input type="date" name="periodEnd" id="periodEnd"
+                th:value="${#temporals.format(reportForm.periodEnd, 'yyyy-MM-dd')}"> -->
+            </div>
+            <div class="helpDecorate">*終了日は開始日と同一か、開始日より未来日になるように入力してください。</div>
+            <div class="errorDecorate" th:if="${#fields.hasErrors('periodStart')}" th:errors="*{periodStart}">対象期間(開始)のエラーメッセージ</div>
+            <div class="errorDecorate" th:if="${#fields.hasErrors('periodEnd')}" th:errors="*{periodEnd}">対象期間(終了)のエラーメッセージ</div>
+            <!-- <div class="errorMark errorDecorate" th:errors="${reportForm}">対象期間の相関エラーメッセージ</div> -->
+            <div class="errorMsg" th:if="${#fields.hasErrors('global')}">
+              <svg xmlns="http://www.w3.org/2000/svg" height="15" width="15" viewBox="0 0 512 512">!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.<path fill="#ff0000" d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/></svg>
+              <span class="errorDecorate" th:errors="${reportForm}" style="vertical-align: middle;">対象期間の相関エラーメッセージ</span>
+            </div>
+          </div>
+
+          <!-- フィールド：エンド企業名 -->
+          <div class="report-input-field">
+            <label class="labelDecorate requiredMark" for="endCompany">エンド企業名</label>
+            <input type="text" name="endCompany" id="endCompany" th:field="*{endCompany}" th:classappend="${#fields.hasErrors('endCompany')} ? 'errorField' : ''">
+            <div class="helpDecorate">*255文字以内で入力してください。</div>
+            <div class="errorMsg" th:if="${#fields.hasErrors('endCompany')}">
+              <svg xmlns="http://www.w3.org/2000/svg" height="15" width="15" viewBox="0 0 512 512">!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.<path fill="#ff0000" d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/></svg>
+              <div class="errorDecorate" th:if="${#fields.hasErrors('endCompany')}" th:errors="*{endCompany}">エンド企業名のエラーメッセージ</div>
+            </div>
+          </div>
+
+          <!-- フィールド：上位顧客名 -->
+          <div class="report-input-field">
+            <label class="labelDecorate requiredMark" for="topCompany">上位顧客名</label>
+            <input type="text" name="topCompany" id="topCompany" th:field="*{topCompany}" th:classappend="${#fields.hasErrors('topCompany')} ? 'errorField' : ''">
+            <div class="helpDecorate">*255文字以内で入力してください。</div>
+            <div class="errorMsg" th:if="${#fields.hasErrors('topCompany')}">
+              <svg xmlns="http://www.w3.org/2000/svg" height="15" width="15" viewBox="0 0 512 512">!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.<path fill="#ff0000" d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/></svg>
+              <div class="errorDecorate" th:if="${#fields.hasErrors('topCompany')}" th:errors="*{topCompany}">上位顧客名のエラーメッセージ</div>
+            </div>
+          </div>
+
+          <!-- フィールド：業種 -->
+          <div class="report-input-field">
+            <label class="labelDecorate requiredMark" for="industry">業種</label>
+            <input type="text" name="industry" id="industry" th:field="*{industry}" th:classappend="${#fields.hasErrors('industry')} ? 'errorField' : ''">
+            <div class="helpDecorate">*255文字以内で入力してください。</div>
+            <div class="errorMsg" th:if="${#fields.hasErrors('industry')}">
+              <svg xmlns="http://www.w3.org/2000/svg" height="15" width="15" viewBox="0 0 512 512">!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.<path fill="#ff0000" d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/></svg>
+              <div class="errorDecorate" th:if="${#fields.hasErrors('industry')}" th:errors="*{industry}">業種のエラーメッセージ</div>
+            </div>
+          </div>
+
+          <!-- フィールド：案件名 -->
+          <div class="report-input-field">
+            <label class="labelDecorate requiredMark" for="item">案件名</label>
+            <input type="text" name="topic" id="topic" th:field="*{topic}" th:classappend="${#fields.hasErrors('topic')} ? 'errorField' : ''">
+            <div class="helpDecorate">*255文字以内で入力してください。</div>
+            <div class="errorMsg" th:if="${#fields.hasErrors('topic')}">
+              <svg xmlns="http://www.w3.org/2000/svg" height="15" width="15" viewBox="0 0 512 512">!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.<path fill="#ff0000" d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/></svg>
+              <div class="errorDecorate" th:if="${#fields.hasErrors('topic')}" th:errors="*{topic}">案件名のエラーメッセージ</div>
+            </div>
+          </div>
+
+          <!-- フィールド：参画人数 -->
+          <div class="report-input-field">
+            <label class="labelDecorate requiredMark" for="participantPeple">参画人数</label>
+            <input type="number" name="participantPeple" id="participantPeple" th:field="*{participantPeple}" th:classappend="${#fields.hasErrors('participantPeple')} ? 'errorField' : ''">
+            <div class="helpDecorate">*数字で入力してください (少数点数字は入力不可)</div>
+            <div class="errorMsg" th:if="${#fields.hasErrors('participantPeple')}">
+              <svg xmlns="http://www.w3.org/2000/svg" height="15" width="15" viewBox="0 0 512 512">!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.<path fill="#ff0000" d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/></svg>
+              <div class="errorDecorate" th:if="${#fields.hasErrors('participantPeple')}" th:errors="*{participantPeple}">案件名のエラーメッセージ</div>
+            </div>
+          </div>
+
+          <!-- フィールド：勤務形態 -->
+          <div class="report-input-field">
+            <label class="labelDecorate requiredMark" for="workingStyle">勤務形態</label>
+            <select name="workingStyle" id="workingStyle" th:field="*{workingStyle}" th:classappend="${#fields.hasErrors('workingStyle')} ? 'errorField' : ''">
+              <option value="" selected>選択してください</option>
+              <option value="combinedwork1">併用勤務(在宅率6割以上)</option>
+              <option value="combinedwork2">併用勤務(在宅率6割未満)</option>
+              <option value="onsitework">現場勤務</option>
+              <option value="telework">在宅勤務</option>
+            </select>
+            <div class="helpDecorate">*プルダウンリストから選択してください。</div>
+            <div class="errorMsg" th:if="${#fields.hasErrors('workingStyle')}">
+              <svg xmlns="http://www.w3.org/2000/svg" height="15" width="15" viewBox="0 0 512 512">!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.<path fill="#ff0000" d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/></svg>
+              <div class="errorDecorate" th:if="${#fields.hasErrors('workingStyle')}" th:errors="*{workingStyle}">案件名のエラーメッセージ</div>
+            </div>
+          </div>
+
+          <!-- フィールド：職場最寄駅 -->
+          <div class="report-input-field">
+            <labe class="labelDecorate requiredMark" for="station">職場最寄駅</labe>
+            <input type="text" name="station" id="station" th:field="*{station}" th:classappend="${#fields.hasErrors('station')} ? 'errorField' : ''">
+            <div class="helpDecorate">*255文字以内で入力してください。</div>
+            <div class="errorMsg" th:if="${#fields.hasErrors('station')}">
+              <svg xmlns="http://www.w3.org/2000/svg" height="15" width="15" viewBox="0 0 512 512">!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.<path fill="#ff0000" d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/></svg>
+              <div class="errorDecorate" th:if="${#fields.hasErrors('station')}" th:errors="*{station}">職場最寄駅のエラーメッセージ</div>
+            </div>
+          </div>
+
+          <!-- フィールド：通勤時間 -->
+          <div class="report-input-field">
+            <label class="labelDecorate requiredMark" for="commutingTime">通勤時間(h)</label>
+            <input type="text" name="commutingTime" id="commutingTime" th:field="*{commutingTime}" th:classappend="${#fields.hasErrors('commutingTime')} ? 'errorField' : ''">
+            <div class="helpDecorate">*整数または少数の数字で入力してください(少数点第2位まで入力可)　　【例】「1」,「1.5」,「1.25」 </div>
+            <div class="errorMsg" th:if="${#fields.hasErrors('commutingTime')}">
+              <svg xmlns="http://www.w3.org/2000/svg" height="15" width="15" viewBox="0 0 512 512">!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.<path fill="#ff0000" d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/></svg>
+              <div class="errorDecorate" th:if="${#fields.hasErrors('commutingTime')}" th:errors="*{commutingTime}">通勤時間のエラーメッセージ</div>
+            </div>
+          </div>
+
+          <!-- フィールド：案件参画日 -->
+          <div class="report-input-field">
+            <label class="labelDecorate requiredMark" for="participantDate">案件参画日</label>
+            <input type="date" name="participantDate" id="participantDate"
+              th:value="${#temporals.format(reportForm.participantDate, 'yyyy-MM-dd')}" th:classappend="${#fields.hasErrors('participantDate')} ? 'errorField' : ''">
+            <div class="helpDecorate">*対象期間(開始)か同一か、対象期間(開始)より過去日になるように入力してください。</div>
+            <div class="errorMsg" th:if="${#fields.hasErrors('participantDate')}">
+              <svg xmlns="http://www.w3.org/2000/svg" height="15" width="15" viewBox="0 0 512 512">!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.<path fill="#ff0000" d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/></svg>
+              <div class="errorDecorate" th:if="${#fields.hasErrors('participantDate')}" th:errors="*{participantDate}">案件参画日のエラーメッセージ</div>
+            </div>
+          </div>
+
+          <!-- フィールド：主要技術 -->
+          <div class="report-input-field">
+            <label class="labelDecorate requiredMark" for="mainTechnology">主要技術(言語／フレームワーク等)</label>
+            <input type="text" name="mainTechnology" id="mainTechnology" th:field="*{mainTechnology}" th:classappend="${#fields.hasErrors('mainTechnology')} ? 'errorField' : ''">
+            <div class="helpDecorate">*255文字以内で入力してください。</div>
+            <div class="errorMsg" th:if="${#fields.hasErrors('mainTechnology')}">
+              <svg xmlns="http://www.w3.org/2000/svg" height="15" width="15" viewBox="0 0 512 512">!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.<path fill="#ff0000" d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/></svg>
+              <div class="errorDecorate" th:if="${#fields.hasErrors('mainTechnology')}" th:errors="*{mainTechnology}">主要技術のエラーメッセージ</div>
+            </div>
+          </div>
+
+          <!-- フィールド：データベース -->
+          <div class="report-input-field">
+            <label class="labelDecorate requiredMark" for="database">データベース</label>
+            <input type="text" name="database" id="database" th:field="*{database}" th:classappend="${#fields.hasErrors('database')} ? 'errorField' : ''">
+            <div class="helpDecorate">*255文字以内で入力してください。</div>
+            <div class="errorMsg" th:if="${#fields.hasErrors('database')}">
+              <svg xmlns="http://www.w3.org/2000/svg" height="15" width="15" viewBox="0 0 512 512">!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.<path fill="#ff0000" d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/></svg>
+              <div class="errorDecorate" th:if="${#fields.hasErrors('database')}" th:errors="*{database}">データベースのエラーメッセージ</div>
+            </div>
+          </div>
+
+          <!-- フィールド：ポジション -->
+          <div class="report-input-field">
+            <label class="labelDecorate requiredMark" for="position">ポジション</label>
+            <!-- <input type="text" name="position" id="position" th:field="*{position}" th:classappend="${#fields.hasErrors('position')} ? 'errorField' : ''"> -->
+            <select name="workingStyle" id="position" th:field="*{position}" th:classappend="${#fields.hasErrors('position')} ? 'errorField' : ''">
+              <option value="" selected>選択してください</option>
+              <option value="Programmer">PG</option>
+              <option value="System Engineer">SE</option>
+              <option value="System Engineer(Employee Substitution)">SE(社員代替)</option>
+              <option value="Tester">テスター</option>
+              <option value="Operator">オペレーター</option>
+              <option value="Project Leader">PL</option>
+              <option value="Project Manager">PM</option>
+              <option value="Employee Substitution">社員代替</option>
+            </select>
+            <div class="helpDecorate">*プルダウンリストから選択してください。</div>
+            <div class="errorMsg" th:if="${#fields.hasErrors('position')}">
+              <svg xmlns="http://www.w3.org/2000/svg" height="15" width="15" viewBox="0 0 512 512">!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.<path fill="#ff0000" d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/></svg>
+              <div class="errorDecorate" th:if="${#fields.hasErrors('position')}" th:errors="*{position}">ポジションのエラーメッセージ</div>
+            </div>
+          </div>
+
+          <!-- フィールド：プロジェクト -->
+          <th:block th:each="project, stat : *{projects}">
+            <div class="report-input-field">
+              <div class="labelDecorate" th:text="'プロジェクト' + ${stat.count}">プロジェクト①</div>
+              <div class="report-input-project-field">
+                <label th:attr="for=*{projects[__${stat.index}__].name}" class="optionalMark">- プロジェクト名</label>
+                <input type="text" th:field="*{projects[__${stat.index}__].name}">
+                <div class="helpDecorate">*255文字以内で入力してください。</div>
+                <label th:attr="for=*{projects[__${stat.index}__].situation}" class="optionalMark">- 状況</label>
+                <textarea rows="10" th:field="*{projects[__${stat.index}__].situation}"></textarea>
+                <div class="helpDecorate">*2000文字以内で入力してください。</div>
+                <label th:attr="for=*{projects[__${stat.index}__].problem}" class="optionalMark">- 課題・問題点</label>
+                <textarea rows="10" th:field="*{projects[__${stat.index}__].problem}"></textarea>
+                <div class="helpDecorate">*2000文字以内で入力してください。</div>
+              </div>
+            </div>
+          </th:block>
+
+          <!-- フィールド：今後の予定 -->
+          <div class="report-input-field">
+            <label class="labelDecorate optionalMark" for="futurePlan">今後の予定</label>
+            <textarea name="futurePlan" id="futurePlan" rows="10" th:field="*{futurePlan}"></textarea>
+            <div class="helpDecorate">*2000文字以内で入力してください。</div>
+          </div>
+
+          <!-- フィールド：顧客の動向・営業情報等 -->
+          <div class="report-input-field">
+            <label class="labelDecorate optionalMark" for="customerTrend">顧客の動向・営業情報等</label>
+            <textarea name="customerTrend" id="customerTrend" rows="10" th:field="*{customerTrend}"></textarea>
+            <div class="helpDecorate">*2000文字以内で入力してください。</div>
+          </div>
+
+          <!-- フィールド：健康状態 -->
+          <div class="report-input-field">
+            <label class="labelDecorate optionalMark" for="helthCondition">健康状態</label>
+            <textarea name="helthCondition" id="helthCondition" rows="10" th:field="*{helthCondition}"></textarea>
+            <div class="helpDecorate">*2000文字以内で入力してください。</div>
+          </div>
+
+          <!-- フィールド：上司に相談 -->
+          <div class="report-input-field">
+            <label class="labelDecorate optionalMark" for="consultation">上司に相談</label>
+            <textarea name="consultation" id="consultation" rows="10" th:field="*{consultation}"></textarea>
+            <div class="helpDecorate">*2000文字以内で入力してください。</div>
+          </div>
+
+          <!-- フィールド：その他 -->
+          <div class="report-input-field">
+            <label class="labelDecorate optionalMark" for="other">その他</label>
+            <textarea name="other" id="other" rows="10" th:field="*{other}"></textarea>
+            <div class="helpDecorate">*2000文字以内で入力してください。</div>
+          </div>
+
+          <!-- 新規作成・変更ボタン -->
+          <div class="report-input-field">
+            <button class="report-input-create-btn btn" type="submit"
+             th:value="${reportShow.showReportCreate ? 'add' : 'edit'}" 
+             th:name="${reportShow.showReportCreate ? 'reportCreate' : 'reportUpdate'}"
+             th:id="${reportShow.showReportCreate ? 'reportCreate' : 'reportUpdate'}"
+             th:text="${reportShow.showReportCreate ? '新規作成' : '変更'}">
+             報告書作成
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+
+  </div>
+
+  <script th:src="@{/static/js/main.js}" src="../static/js/main.js"></script>
+</body>
+
+</html>

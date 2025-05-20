@@ -1,0 +1,159 @@
+@charset "utf-8";
+
+/* 全要素 */
+* {
+  /* フォント */
+  font-family: "メイリオ", Arial, sans-serif;
+}
+
+/* body要素 */
+body {
+  width: 50%;
+  /* センタリング */
+  margin: 0 auto;
+}
+
+/* h1要素 */
+h2 {
+  background: linear-gradient(transparent 60%, #c8f1ff 60%);
+  font-family: "メイリオ", Arial, sans-serif;
+  /* border-bottom: 3px solid #cc0066;
+  padding: 10px 0; */
+}
+
+.inputSize80 {
+  width: 80%;
+}
+
+.inputSize100 {
+  width: 100%;
+}
+
+.inputSize30 {
+  width: 30%;
+}
+
+.inputSize40 {
+  width: 40%;
+}
+
+.inputSize35 {
+  width: 35%;
+}
+
+
+.inputSize20 {
+  width: 20%;
+}
+
+.inputSize10 {
+  width: 10%;
+}
+
+/* input,textarea,select要素 */
+input,
+textarea,
+select {
+  border-radius: 2px;
+  border: 1px solid grey;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0.5em;
+  /* font-family: "メイリオ", Arial, sans-serif; */
+  font-size: 0.8em;
+}
+
+/* textarea要素 */
+textarea {
+  /* サイズ変更不可 */
+  resize: none;
+}
+
+/* select要素 */
+select {
+  background-color: #fff;
+}
+
+/* input,textarea,select要素 フォーカス時 */
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  box-shadow: 0px 0px 3px 0px red;
+}
+
+/* ヘッダー装飾 */
+.headerDecorate {
+  border-left: solid 5px #c8f1ff;
+  padding-left: 0.5em;
+  margin-bottom: 0.5em;
+  font-weight: bold;
+}
+
+/* 必須マーク */
+.required::after {
+  content: "必須";
+  color: #ffffff;
+  background: #cc0000;
+  font-size: 0.7em;
+  padding: 0.3em;
+  border-radius: 0.5em;
+  margin-left:0.3em;
+}
+
+/* ボックス */
+.itemBox {
+  margin-bottom: 3.0em;
+  width: 80%;
+}
+
+/* ボックス */
+.itemBoxSub {
+  margin-left: 1.0em;
+  margin-bottom: 1.0em;
+}
+
+/* #newLoadButton {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  width: 10%;
+  padding: 1rem 4rem;
+  border: 2px solid #27acd9;
+  border-radius: 2px;
+  background: #27acd9;
+  color: #fff;
+  transition: 0.5s;
+  margin-right: 1.0em;
+} */
+
+
+/* ボタン */
+.button {
+  display: inline-block;
+  text-align: left;
+  text-align: center;
+  text-decoration: none;
+  width: 20%;
+  border: 2px solid #27acd9;
+  border-radius: 4px;
+  background: #27acd9;
+  color: #fff;
+  transition: 0.5s;
+  padding: 0.5em 1.0em;
+  margin-right: 0.5em;
+  margin-bottom: 1.0em;
+}
+
+/* ボタン ホバー時 */
+.button:hover {
+  color: #27acd9;
+  background: #fff;
+}
+
+/* 報告書作成ボタン */
+#reportButton {
+  display: inline-block;
+  width: 80%;
+  height: 120%;
+}

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>業務報告書</title>
+  <link rel="stylesheet" th:href="@{/css/reset.css}" href="../static/css/reset.css" />
+  <link rel="stylesheet" th:href="@{/css/base.css}" href="../static/css/base.css" />
+  <link rel="stylesheet" th:href="@{/css/footer.css}" href="../static/css/footer.css" />
+</head>
+
+<body>
+  <!-- フラグメント化：フッター(th:relpaceで合成するとき、div要素を残さない) -->
+  <div th:fragment="footer" th:remove="tag">
+    <footer class="footer">
+      <div>(c)Copyright 2024 persian jug Corp.</div>
+    </footer>
+  </div>
+  <script th:src="@{/js/main.js}"  src="../static/js/main.js"></script>
+</body>
+
+</html>

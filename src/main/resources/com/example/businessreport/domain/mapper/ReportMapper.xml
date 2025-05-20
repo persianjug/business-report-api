@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+  namespace="com.example.businessreport.domain.mapper.ReportMapper">
+  <!-- 業務報告書 ResultMap -->
+  <resultMap id="reportResultMap"
+    type="com.example.businessreport.domain.model.Report">
+    <id column="reportId" property="reportId" />
+    <result column="title" property="title" />
+    <result column="periodStart" property="periodStart" />
+    <result column="periodEnd" property="periodEnd" />
+    <result column="endCompany" property="endCompany" />
+    <result column="topCompany" property="topCompany" />
+    <result column="industry" property="industry" />
+    <result column="topic" property="topic" />
+    <result column="participantPeple" property="participantPeple" />
+    <result column="workingStyle" property="workingStyle" />
+    <result column="station" property="station" />
+    <result column="commutingTime" property="commutingTime" />
+    <result column="participantDate" property="participantDate" />
+    <result column="mainTechnology" property="mainTechnology" />
+    <result column="database" property="database" />
+    <result column="position" property="position" />
+    <result column="fullSituation" property="fullSituation" />
+    <result column="futurePlan" property="futurePlan" />
+    <result column="customerTrend" property="customerTrend" />
+    <result column="helthCondition" property="helthCondition" />
+    <result column="consultation" property="consultation" />
+    <result column="other" property="other" />
+    <result column="createAt" property="createAt" />
+    <result column="updateAt" property="updateAt" />
+  </resultMap>
+
+  <!-- 作業内容 ResultMap -->
+  <resultMap id="workDetailResultMap"
+    type="com.example.businessreport.domain.model.WorkDetail">
+    <id column="workDetailId" property="workDetailId" />
+    <result column="reportId" property="reportId" />
+    <result column="workName" property="workName" />
+    <result column="situation" property="situation" />
+    <result column="issuesProblems" property="issuesProblems" />
+  </resultMap>
+
+  <!-- 業務報告書(full) resultMap -->
+  <resultMap id="reportFullResultMap"
+    type="com.example.businessreport.domain.dto.ReportFull">
+    <id column="reportId" property="reportId" />
+    <result column="title" property="title" />
+    <result column="periodStart" property="periodStart" />
+    <result column="periodEnd" property="periodEnd" />
+    <result column="endCompany" property="endCompany" />
+    <result column="topCompany" property="topCompany" />
+    <result column="industry" property="industry" />
+    <result column="topic" property="topic" />
+    <result column="participantPeple" property="participantPeple" />
+    <result column="workingStyle" property="workingStyle" />
+    <result column="station" property="station" />
+    <result column="commutingTime" property="commutingTime" />
+    <result column="participantDate" property="participantDate" />
+    <result column="mainTechnology" property="mainTechnology" />
+    <result column="database" property="database" />
+    <result column="position" property="position" />
+    <result column="fullSituation" property="fullSituation" />
+    <result column="futurePlan" property="futurePlan" />
+    <result column="customerTrend" property="customerTrend" />
+    <result column="helthCondition" property="helthCondition" />
+    <result column="consultation" property="consultation" />
+    <result column="other" property="other" />
+    <result column="createAt" property="createAt" />
+    <result column="updateAt" property="updateAt" />
+    <collection property="workDetails" javaType="Arraylist"
+      ofType="com.example.businessreport.domain.model.WorkDetail">
+      <result column="workDetailId" property="workDetailId" />
+      <result column="reportId" property="reportId" />
+      <result column="workName" property="workName" />
+      <result column="situation" property="situation" />
+      <result column="issuesProblems" property="issuesProblems" />
+    </collection>
+  </resultMap>
+
+  <!-- 業務報告書(Full)1件取得 -->
+  <select id="findReportFullById" parameterType="integer"
+    resultMap="reportFullResultMap">
+    SELECT
+      rp.*
+     ,wk.*
+    FROM
+      report rp
+    LEFT OUTER JOIN
+      workdetail wk
+    ON
+      rp.reportId = wk.reportId
+    WHERE
+      rp.reportId = #{reportId}
+  </select>
+
+  <!-- 業務報告書(Full)全件取得 -->
+  <select id="findReportFullAll" resultMap="reportFullResultMap">
+    SELECT
+	    rp.*
+	   ,wk.*
+    FROM
+      report rp
+    LEFT OUTER JOIN
+      workdetail wk
+    ON
+      rp.reportId = wk.reportId
+    ORDER BY
+      rp.reportId DESC
+  </select>
+
+  <!-- 作業内容データ1件取得 -->
+  <select id="findWorkDetailById" resultMap="workDetailResultMap">
+    SELECT
+     wk.*
+    FROM
+      workdetail wk
+    WHERE
+      wk.reportId = #{reportId} AND
+      wk.workDetailId = #{workDetailId}
+  </select>
+
+  <!-- 業務報告書(Full)最新の1件取得 -->
+  <select id="findReportFullLatest" resultMap="reportFullResultMap">
+    SELECT
+      rp.*
+     ,wk.*
+    FROM
+      report rp
+    LEFT OUTER JOIN
+      workdetail wk
+    ON
+      rp.reportId = wk.reportId
+    WHERE
+      rp.reportId = (SELECT MAX(rp2.reportId) FROM report rp2)
+  </select>
+
+
+
+  <!-- 業務報告書 追加 -->
+  <insert id="createReport" parameterType="com.example.businessreport.domain.model.Report" useGeneratedKeys="true" keyProperty="reportId">
+    INSERT INTO
+    report(
+      title
+      ,periodStart
+      ,periodEnd
+      ,endCompany
+      ,topCompany
+      ,industry
+      ,topic
+      ,participantPeple
+      ,workingStyle
+      ,station
+      ,commutingTime
+      ,participantDate
+      ,mainTechnology
+      ,database
+      ,position
+      ,fullSituation
+      ,futurePlan
+      ,customerTrend
+      ,helthCondition
+      ,consultation
+      ,other
+      ,createAt
+      ,updateAt
+    )
+    VALUES(
+      CONCAT(
+        '業務報告書 '
+        ,to_char(#{periodStart},'yyyy')
+        ,'年'
+        ,to_char(#{periodStart},'mm')
+        ,'月'
+        ,to_char(#{periodStart},'dd')
+        ,'日 ～ '
+        ,to_char(#{periodEnd},'yyyy')
+        ,'年'
+        ,to_char(#{periodEnd},'mm')
+        ,'月'
+        ,to_char(#{periodEnd},'dd')
+        ,'日'
+      )
+      ,#{periodStart}
+      ,#{periodEnd}
+      ,#{endCompany}
+      ,#{topCompany}
+      ,#{industry}
+      ,#{topic}
+      ,#{participantPeple}
+      ,#{workingStyle}
+      ,#{station}
+      ,#{commutingTime}
+      ,#{participantDate}
+      ,#{mainTechnology}
+      ,#{database}
+      ,#{position}
+      ,#{fullSituation}
+      ,#{futurePlan}
+      ,#{customerTrend}
+      ,#{helthCondition}
+      ,#{consultation}
+      ,#{other}
+      ,CURRENT_TIMESTAMP
+      ,CURRENT_TIMESTAMP
+    )
+  </insert>
+
+  <update id="updateReport" parameterType="com.example.businessreport.domain.model.Report">
+    UPDATE report SET
+      title =
+        CONCAT(
+          '業務報告書 '
+          ,to_char(#{periodStart},'yyyy')
+          ,'年'
+          ,to_char(#{periodStart},'mm')
+          ,'月'
+          ,to_char(#{periodStart},'dd')
+          ,'日 ～ '
+          ,to_char(#{periodEnd},'yyyy')
+          ,'年'
+          ,to_char(#{periodEnd},'mm')
+          ,'月'
+          ,to_char(#{periodEnd},'dd')
+          ,'日'
+        )
+      ,periodStart = #{periodStart}
+      ,periodEnd = #{periodEnd}
+      ,endCompany = #{endCompany}
+      ,topCompany = #{topCompany}
+      ,industry = #{industry}
+      ,topic = #{topic}
+      ,participantPeple = #{participantPeple}
+      ,workingStyle = #{workingStyle}
+      ,station = #{station}
+      ,commutingTime = #{commutingTime}
+      ,participantDate = #{participantDate}
+      ,mainTechnology = #{mainTechnology}
+      ,database = #{database}
+      ,position = #{position}
+      ,fullSituation = #{fullSituation}
+      ,futurePlan = #{futurePlan}
+      ,customerTrend = #{customerTrend}
+      ,helthCondition = #{helthCondition}
+      ,consultation = #{consultation}
+      ,other = #{other}
+      ,updateAt = CURRENT_TIMESTAMP
+    WHERE
+      reportId = #{reportId}
+  </update>
+
+  <!-- 作業内容 追加 -->
+  <insert id="createWorkDetail" parameterType="com.example.businessreport.domain.model.WorkDetail" useGeneratedKeys="true" keyProperty="workDetailId">
+    INSERT INTO
+    workdetail(
+      workDetailId
+      ,reportId
+      ,workName
+      ,situation
+      ,issuesProblems
+      ,createAt
+      ,updateAt
+    )
+    VALUES(
+      #{workDetailId}
+      ,#{reportId}
+      ,#{workName}
+      ,#{situation}
+      ,#{issuesProblems}
+      ,CURRENT_TIMESTAMP
+      ,CURRENT_TIMESTAMP
+    )
+  </insert>
+  
+  <!-- 作業内容 更新 -->
+  <update id="updateWorkDetail" parameterType="com.example.businessreport.domain.model.WorkDetail">
+    UPDATE workdetail SET
+      workName = #{workName}
+      ,situation = #{situation}
+      ,issuesProblems = #{issuesProblems}
+      ,updateAt = CURRENT_TIMESTAMP
+    WHERE
+      workDetailId = #{workDetailId} AND
+      reportId = #{reportId}    
+  </update>
+</mapper>

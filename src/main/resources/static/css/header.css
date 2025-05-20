@@ -1,0 +1,45 @@
+@charset "utf-8";
+
+/*-------------------------------------------------------
+ * ヘッダー
+ *-----------------------------------------------------*/
+.header {
+  /* 2列(ロゴ, タイトル)：明示的なグリッド */
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+
+  /* 暗黙的なグリッド列が増えるようにする */
+  grid-auto-flow: column;
+
+  /* 行列間の余白 */
+  gap: 1.0em;
+
+  /* パディング：上下左右 */
+  padding: 0.5em;
+
+  /* 縦方向中央揃え */
+  align-items: center;
+
+  /* タップターゲットを拡張 */
+  /* .action,
+  .nav a {
+    padding: 12px;
+  } */
+}
+
+/* アバターのスタイル */
+.avatar img {
+  display: block;
+  width: 40px;
+  height: 40px;
+  background-color: #f1f5f9;
+  border: solid 1px #cbd5e1;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* アバターのユーザー名 */
+.username {
+  font-size: small;
+}
+

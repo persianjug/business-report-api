@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>業務報告書 参照</title>
+  <link rel="stylesheet" th:href="@{/css/reset.css}" href="../static/css/reset.css" />
+  <link rel="stylesheet" th:href="@{/css/base.css}" href="../static/css/base.css" />
+  <link rel="stylesheet" th:href="@{/css/reportForm.css}" href="../static/css/reportForm.css" />
+</head>
+
+<body>
+  <!-- 参照画面 -->
+  <!-- <div class="modal-dialog" style="overflow: hidden;"> -->
+  <div th:fragment="reportBrowse" th:remove="tag">
+    <!-- 入力フォーム -->
+    <form method="post" th:action="@{/report}" action="" class="report-input-form" th:object="${reportFull}">
+      <div class="report-input-container">
+
+        <!-- ヘッダー、閉じるボタン -->
+        <header class="report-input-header">
+          <!-- <div>業務報告書 内容確認</div> -->
+          <!-- <div>Confirm Business Report Contents (内容確認)</div> -->
+          <div>内容確認</div>
+          <button method="post" class="close-cross-btn" id="reportFormClose" name="reportFormClose"></button>
+        </header>
+
+        <!-- フィールド -->
+        <div class="report-input-fields">
+          <!-- 報告書ID -->
+          <div class="report-input-field">
+            <label class="labelDecorate" for="reportId">報告書ID</label>
+            <input type="text" name="reportId" id="reportId" th:field="*{reportId}" disabled>
+          </div>
+
+          <!-- タイトル -->
+          <div class="report-input-field">
+            <label class="labelDecorate" for="title">タイトル</label>
+            <input type="text" name="title" id="title" th:field="*{title}" disabled>
+          </div>
+
+          <!-- フィールド：対象期間 -->
+          <div class="report-input-field">
+            <label class="labelDecorate" for="periodStart">対象期間(開始 - 終了)</label>
+            <div class="report-input-period-field">
+              <input type="text" name="periodStart" id="periodStart"
+                th:value="${#temporals.format(reportFull.periodStart, 'yyyy-MM-dd')}" disabled>
+              <div class="periodDelimiter">-</div>
+              <input type="text" name="periodEnd" id="periodEnd"
+              th:value="${#temporals.format(reportFull.periodEnd, 'yyyy-MM-dd')}" disabled>
+            </div>
+          </div>
+
+          <!-- フィールド：エンド企業名 -->
+          <div class="report-input-field">
+            <label class="labelDecorate" for="endCompany">エンド企業名</label>
+            <input type="text" name="endCompany" id="endCompany" th:field="*{endCompany}" disabled>
+          </div>
+
+          <!-- フィールド：上位顧客名 -->
+          <div class="report-input-field">
+            <label class="labelDecorate" for="topCompany">上位顧客名</label>
+            <input type="text" name="topCompany" id="topCompany" th:field="*{topCompany}" disabled>
+          </div>
+
+          <!-- フィールド：上位顧客名 -->
+          <div class="report-input-field">
+            <label class="labelDecorate" for="industry">業種</label>
+            <input type="text" name="industry" id="industry" th:field="*{industry}" disabled>
+          </div>
+
+          <!-- フィールド：案件名 -->
+          <div class="report-input-field">
+            <label class="labelDecorate" for="item">案件名</label>
+            <input type="text" name="topic" id="topic" th:field="*{topic}" disabled>
+          </div>
+
+          <!-- フィールド：参画人数 -->
+          <div class="report-input-field">
+            <label class="labelDecorate" for="participantPeple">エル・フィールド参画人数</label>
+            <input type="number" name="participantPeple" id="participantPeple" th:field="*{participantPeple}" disabled>
+          </div>
+
+          <!-- フィールド：勤務形態 -->
+          <div class="report-input-field" th:switch="${reportFull.workingStyle}">
+            <label class="labelDecorate" for="workingStyle">勤務形態</label>
+            <input type="text" name="workingStyle" id="workingStyle" th:case="combinedwork1" th:value="併用勤務_在宅率6割以上" disabled>
+            <input type="text" name="workingStyle" id="workingStyle" th:case="combinedwork2" th:value="併用勤務_在宅率6割未満" disabled>
+            <input type="text" name="workingStyle" id="workingStyle" th:case="onsitework" th:value="現場勤務" disabled>
+            <input type="text" name="workingStyle" id="workingStyle" th:case="telework" th:value="在宅勤務" disabled>
+            <input type="text" name="workingStyle" id="workingStyle" th:case="*" th:value="選択なし" disabled>
+          </div>
+
+          <!-- フィールド：職場最寄駅 -->
+          <div class="report-input-field">
+            <labe class="labelDecorate" for="station">職場最寄駅</labe>
+            <input type="text" name="station" id="station" th:field="*{station}" disabled>
+          </div>
+
+          <!-- フィールド：通勤時間 -->
+          <div class="report-input-field">
+            <label class="labelDecorate" for="commutingTime">通勤時間(h)</label>
+            <input type="text" name="commutingTime" id="commutingTime" th:field="*{commutingTime}" disabled>
+          </div>
+
+          <!-- フィールド：案件参画日 -->
+          <div class="report-input-field">
+            <label class="labelDecorate" for="participantDate">案件参画日</label>
+            <input type="text" name="participantDate" id="participantDate"
+              th:value="${#temporals.format(reportFull.participantDate, 'yyyy-MM-dd')}" disabled>
+          </div>
+
+          <!-- フィールド：主要技術 -->
+          <div class="report-input-field">
+            <label class="labelDecorate" for="mainTechnology">主要技術(言語／フレームワーク等)</label>
+            <input type="text" name="mainTechnology" id="mainTechnology" th:field="*{mainTechnology}" disabled>
+          </div>
+
+          <!-- フィールド：データベース -->
+          <div class="report-input-field">
+            <label class="labelDecorate" for="database">データベース</label>
+            <input type="text" name="database" id="database" th:field="*{database}" disabled>
+          </div>
+
+          <!-- フィールド：ポジション -->
+          <div class="report-input-field" th:switch="${reportFull.position}">
+            <label class="labelDecorate" for="position">ポジション</label>
+            <input type="text" name="position" id="position" th:case="'Programmer'" th:value="'PG'" disabled>
+            <input type="text" name="position" id="position" th:case="'SystemEngineer'" th:value="'SE'" disabled>
+            <input type="text" name="position" id="position" th:case="'SystemEngineerEmployeeSubstitution'" th:value="'SE(社員代替)'" disabled>
+            <input type="text" name="position" id="position" th:case="'Tester" th:value="'テスター'" disabled>
+            <input type="text" name="position" id="position" th:case="'Operator" th:value="'オペレーター'" disabled>
+            <input type="text" name="position" id="position" th:case="'ProjectLeader'" th:value="'PL'" disabled>
+            <input type="text" name="position" id="position" th:case="'ProjectManager'" th:value="'PM'" disabled>
+            <input type="text" name="position" id="position" th:case="'EmployeeSubstitution'" th:value="'社員代替'" disabled>
+            <input type="text" name="position" id="position" th:case="*" th:value="'選択なし'" disabled>
+          </div>
+
+          <!-- フィールド：全体状況 -->
+          <div class="report-input-field">
+            <label class="labelDecorate" for="fullSituation">全体状況</label>
+            <textarea name="fullSituation" id="fullSituation" rows="10" th:field="*{fullSituation}" disabled></textarea>
+          </div>
+
+          <!-- フィールド：作業内容 -->
+          <th:block th:each="workDetail, stat : *{workDetails}">
+            <div class="report-input-field">
+              <div class="labelDecorate" th:text="'作業' + ${stat.count}">作業1</div>
+              <div class="report-input-project-field">
+                <label th:attr="for=*{workDetails[__${stat.index}__].workName}">- 作業名</label>
+                <input type="text" th:field="*{workDetails[__${stat.index}__].workName}" disabled>
+                <label th:attr="for=*{workDetails[__${stat.index}__].situation}">- 状況</label>
+                <textarea rows="10" th:field="*{workDetails[__${stat.index}__].situation}" disabled></textarea>
+                <label th:attr="for=*{workDetails[__${stat.index}__].issuesProblems}">- 課題・問題点</label>
+                <textarea rows="10" th:field="*{workDetails[__${stat.index}__].issuesProblems}" disabled></textarea>
+              </div>
+            </div>
+          </th:block>
+
+          <!-- フィールド：今後の予定 -->
+          <div class="report-input-field">
+            <label class="labelDecorate" for="futurePlan">今後の予定</label>
+            <textarea name="futurePlan" id="futurePlan" rows="10" th:field="*{futurePlan}" disabled></textarea>
+          </div>
+
+          <!-- フィールド：顧客の動向・営業情報等 -->
+          <div class="report-input-field">
+            <label class="labelDecorate" for="customerTrend">顧客の動向・営業情報等</label>
+            <textarea name="customerTrend" id="customerTrend" rows="10" th:field="*{customerTrend}" disabled></textarea>
+          </div>
+
+          <!-- フィールド：健康状態 -->
+          <div class="report-input-field">
+            <label class="labelDecorate" for="helthCondition">健康状態</label>
+            <textarea name="helthCondition" id="helthCondition" rows="10" th:field="*{helthCondition}" disabled></textarea>
+          </div>
+
+          <!-- フィールド：上司に相談 -->
+          <div class="report-input-field">
+            <label class="labelDecorate" for="consultation">上司に相談</label>
+            <textarea name="consultation" id="consultation" rows="10" th:field="*{consultation}" disabled></textarea>
+          </div>
+
+          <!-- フィールド：その他 -->
+          <div class="report-input-field">
+            <label class="labelDecorate" for="other">その他</label>
+            <textarea name="other" id="other" rows="10" th:field="*{other}" disabled></textarea>
+          </div>
+        </div>
+      </div>
+    </form>
+
+  </div>
+
+  <script th:src="@{/static/js/main.js}" src="../static/js/main.js"></script>
+</body>
+
+</html>

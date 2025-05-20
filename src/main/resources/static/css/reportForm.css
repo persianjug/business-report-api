@@ -1,0 +1,378 @@
+@charset "utf-8";
+
+/*-------------------------------------------------------
+ * モーダル(全体)
+ *-----------------------------------------------------*/
+.modal-dialog {
+  /* 相対位置 */
+  position: relative;
+  /* フォントサイズ：小 */
+  font-size: small;
+  /* 背景色：白色 */
+  background-color: #fff;
+  /* ボーダー：角丸く、影付き */
+  border-radius: 10px;
+  box-shadow: 0 1px 4px -1px rgb(0 0 0 / 20%);
+  /* max-height: 100%; */
+  /* 余白 */
+  padding: 2.0em 3.0em;
+
+  overflow-y: hidden;
+  overflow-x: hidden;
+
+  @media (width <=960px) {
+    padding: 2.0em 1.0em;
+  }
+}
+
+/* モーダルを開く時のアニメーション提示 */
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* モーダルを開くときのアニメーション実行 */
+.modal-dialog[open] {
+  animation-name: modalFadeIn;
+  animation-fill-mode: forwards;
+  animation-duration: 200ms;
+  animation-timing-function: ease-out;
+}
+
+/* モーダルの背景ぼかし */
+.modal-dialog::backdrop {
+  background: rgba(163, 212, 226, 0.32);
+  backdrop-filter: blur(100px);
+}
+
+/* 閉じる「×」ボタン(全体) */
+.close-cross-btn {
+  display: block;
+  position: relative;
+  width: 1.0em;
+  height: auto;
+}
+
+/* 閉じる「×」ボタン */
+.close-cross-btn::before,
+.close-cross-btn::after {
+  /* ボーダーで「×」を描画するため要素は空を設定 */
+  content: "";
+  /* 「×」ボタンを真ん中に表示 */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  /* 「×」ボタンの太さ */
+  width: 3px;
+  /* 「×」ボタンの高さ */
+  height: 25px;
+  /* 「×」ボタンの色 */
+  background-color: #333;
+}
+
+/* 「×」ボタンの描画 */
+.close-cross-btn::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.close-cross-btn::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+/*-------------------------------------------------------
+ * 入力フォーム
+ *-----------------------------------------------------*/
+.report-input-form {
+  /* 3列(余白, コンテナー, 余白) */
+  /* コンテナーは2fr */
+  display: grid;
+  grid-template:
+    ". container ." auto
+    / 1fr 2fr 1fr;
+
+  /* 行間の余白 */
+   row-gap: 2.0em;
+
+  /* パディング 上 左右 下 */
+  padding: 1.0em 0 1.0em;
+
+  /* 背景色：ピンクの不透明度30% */
+  background-color: rgb(255 153 255 / 30%);
+
+  /* height: 100svh; */
+
+  /* コンテナー */
+  >.report-input-container {
+    grid-area: container;
+  }
+}
+
+/* コンテナー */
+.report-input-container {
+  /* 1行目：3列(余白, ヘッダー, 余白) */
+  /* 2行目：3列(余白, フィールド, 余白) */
+  /* ヘッダー, フィールドは1fr */
+  display: grid;
+  grid-template:
+    "header" auto
+    "latest" auto
+    "fields" auto
+    / 1fr;
+
+  /* 行間の余白 */
+  /* row-gap: 2.0em; */
+
+  /* パディング 上 左右 下 */
+  padding: 1.0em 0 1.0em;
+  font-size: small;
+
+  /* 背景色：白色 */
+  /* background-color: #fff; */
+
+  /* ヘッダー */
+  >.report-input-header {
+    grid-area: header;
+  }
+
+  /* 最新状態ボタン */
+  >.report-input-latest {
+    grid-area: latest;
+  }
+
+  /* フィールド */
+  >.report-input-fields {
+    grid-area: fields;
+    /* overflow-y: auto; */
+  }
+}
+
+/* ヘッダー */
+.report-input-header {
+  /* 2列：タイトル, 「×」ボタン */
+  display: grid;
+  grid-template-columns: 1fr auto;
+
+  /* ヘッダーを上部固定で表示 */
+  position: sticky;
+  top: 0;
+
+  /* ボーダー：左上、右上角丸く */
+  border-radius: 10px 10px 0 0;
+  /*    box-shadow: 0 1px 4px -1px rgb(0 0 0 / 20%);*/
+
+  /* 背景色：白色 */
+  background-color: #fff;
+
+  /* パディング 上下 左右 */
+  /* padding: 0.2em 0.5em; */
+  padding: 0.5em 1.5em;
+
+  /* フォント：親要素の2倍、太字 */
+  font-size: large;
+  font-weight: bold;
+
+  /* ボーダー：下 */
+  border-bottom: 1px solid #ccc;
+}
+
+/* フィールド */
+.report-input-field {
+  /* 1列のグリッドレイアウト */
+  display: grid;
+  grid-template-columns: subgrid;
+
+  /* パディング：上 左右 下 */
+  padding: 3.0em 2.0em 0;
+
+  /* 背景色：白色 */
+  background-color: #fff;
+
+  /* 配下の要素 */
+  > * {
+    /* マージン：下 */
+    margin-bottom: 0.5em;
+  }
+
+  /* 報告書IDのラベル、最新情報を読み込むボタン */
+  >.report-input-latest {
+    /* 2列：報告書IDのラベル, 最新情報を読み込むボタン */
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-auto-flow: column;
+
+    /* アイテムを縦下揃え */
+    align-items: end;
+
+    /* grid-template-areas:
+      ". latest"; */
+    /* grid-template-columns: 1fr auto; */
+    /* grid-template-columns: auto 1fr;
+    grid-auto-flow: column;
+    justify-content: end; */
+
+    /* 背景色：白色 */
+    /* background-color: #fff; */
+
+    /* パディング 上下 左右 */
+    /* padding: 2.0em 2.0em 0; */
+
+    /* フォント：親要素の2倍、太字 */
+    /* font-size: large; */
+    /* font-weight: bold; */
+
+    /* > * {
+      grid-area: latest;
+    } */
+  }
+
+  /* 対象期間 */
+  >.report-input-period-field {
+    /* 3列(開始, 「-」, 終了) */
+    display: grid;
+    /* grid-template-columns: 1fr 5% 1fr; */
+    grid-template-columns: 1fr auto 1fr;
+    /* grid-auto-flow: column; */
+    /* テキスト：中央揃え */
+    text-align: center;
+
+    /* グリッドアイテム：縦中央揃え */
+    align-items: center;
+
+    /* 対象期間(開始)、対象期間(終了)の間の区切り記号のパディング */
+    > .periodDelimiter {
+      padding: 0 1.0em;
+    }
+  }
+
+  /* プロジェクト */
+  >.report-input-project-field {
+    /* 1列 */
+    display: grid;
+    grid-template-columns: subgrid;
+
+    /* 配下の要素 */
+    > * {
+      /* マージン：下 */
+      margin-bottom: 0.5em;
+    }
+
+    /* パディング：左 */
+    padding-left: 1.0em;
+
+    /* ラベル パディング：上 */
+    >label {
+      padding-top: 1.0em;
+    }
+  }
+}
+
+/* フィールドの最後の要素 */
+.report-input-fields {
+  >.report-input-field:last-child {
+    /*   ボーダー：左下、右下角丸く、下影付き */
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 5px 0 0 rgb(0 0 0 / 10%);
+    padding-bottom: 2.0em;
+  }
+}
+
+/* ラベル装飾 */
+.labelDecorate {
+  /* margin-bottom: 0.5em; */
+  font-weight: bold;
+}
+
+/* ヘルプメッセージ装飾 */
+.helpDecorate {
+  color: gray;
+  /* padding-top: 0.5em; */
+}
+
+/* 必須マーク */
+.requiredMark::after {
+  /* display: inline; */
+  content: "必須";
+  background-color: #f00;
+  color: #fff;
+  /* font-size: x-small; */
+  font-size: small;
+  border-radius: 5px;
+  padding: 0.1em 0.5em;
+  margin-left: 1.0em;
+  vertical-align: middle;
+}
+
+/* 任意マーク */
+.optionalMark::after {
+  /* display: inline; */
+  content: "任意";
+  background-color: gray;
+  color: #fff;
+  /* font-size: x-small; */
+  font-size: small;
+  border-radius: 5px;
+  padding: 0.1em 0.5em;
+  margin-left: 1.0em;
+  vertical-align: middle;
+}
+
+/* エラーメッセージ装飾 */
+.errorDecorate {
+  font-weight: bold;
+  color: #f00;
+  /* padding-top: 0.5em; */
+}
+
+/* 新規作成・変更ボタン */
+.report-input-create-btn {
+  font-size: larger;
+  font-weight: bold;
+}
+
+/* 無効フィールド */
+.disabledField {
+  /* 背景色：灰色の15%透過 */
+  background-color: rgb(204 204 204 / 15%);
+}
+
+/* 無効フィールドにフォーカスが当たった時 */
+.disabledField:focus-visible {
+	/* outlineを表示しない */
+	outline: none;
+}
+
+/* フィールド(エラー時)*/
+.errorField {
+  /* フィールドを薄赤色にする */
+	outline: 2px solid rgb(255 0 0 / 30%);
+  background-color: rgb(255 0 0 / 5%);
+}
+
+/* エラーメッセージ(フィールド) */
+.errorMsgField {
+  /* 配下の要素はインライン要素で縦中央揃えにする */
+  * {
+    display: inline;
+    vertical-align: middle;
+  }
+}
+
+/* エラーメッセージ(全体) */
+.errorMsgAll {
+  border-radius: 5px;
+  padding: 1.0em;
+  background-color: rgb(255 0 0 / 10%);
+
+  /* 配下の要素はインライン要素で縦中央揃えにする */
+  * {
+    display: inline;
+    vertical-align: middle;
+  }
+
+}
+

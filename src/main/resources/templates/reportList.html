@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>業務報告書</title>
+  <link rel="stylesheet" th:href="@{/css/reset.css}" href="../static/css/reset.css" />
+  <link rel="stylesheet" th:href="@{/css/base.css}" href="../static/css/base.css" />
+  <link rel="stylesheet" th:href="@{/css/main.css}" href="../static/css/main.css" />
+</head>
+
+<body>
+  <!-- フラグメント化：メインコンテンツ(th:relpaceで合成するとき、div要素を残さない) -->
+  <div th:fragment="reportList" th:remove="tag">
+    <!-- 業務報告書一覧 -->
+    <div class="reportlist">
+      <!-- ヘッダー -->
+      <div class="reportlist-header">
+        <!-- タイトル -->
+        <div class="reportlist-title" th:text="'業務報告書一覧'">Business Report List</div>
+        <!-- 新規作成ボタン -->
+        <div class="reportlist-add-btn">
+          <form method="post" th:action="@{/report}">
+            <button type="submit" class="open-add-report-btn btn-small" name="reportAddOpen" id="reportAddOpen" th:text="'+ 報告書を作成'">
+              + Add Report
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- カード(モバイル表示時) -->
+      <div class="reportlist-cards show-on-mobile">
+        <div class="reportlist-card" th:each="report : ${reportlist}">
+          <img class="reportlist-card-photo img-fill" th:src="@{/img/avatar/meme2.png}"
+            src="../static/img/avatar/meme2.png" alt="" width="300" height="200" />
+          <h2 class="reportlist-card-title" th:text="${report.title}">業務報告書 2024年5月</h2>
+<!--          <p class="reportlist-card-overview" th:text="${report.overview}">マイグレ案件、ひつじ山生命保険会社で出向中。社員代替でレビューを実施</p>-->
+          <div class="avatar">
+            <img th:src="@{/img/avatar/meme2.png}" src="../static/img/avatar/meme2.png" alt="" />
+          </div>
+          <div class="reportlist-card-action">
+            <button type="submit" class="reportlist-detail-action1 btn-small" name="reportBrowse" id="reportBrowse"
+              th:value="${report.reportId}" th:form="'reportlist-card-form-browse-' + ${report.reportId}" th:text="'参照'">Browse</button>
+            <button type="submit" class="reportlist-detail-action2 btn-small" name="reportEdit" id="reportEdit"
+              th:value="${report.reportId}" th:form="'reportlist-card-form-edit-' + ${report.reportId}" th:text="'編集'">Edit</button>
+            <button type="submit" class="reportlist-detail-action3 btn-small" name="reportExcel" id="reportExcel"
+              th:value="${report.reportId}" th:form="'reportlist-card-form-excel-' + ${report.reportId}" th:text="'Excel出力'">Excel</button>
+          </div>
+          <form method="post" th:action="@{/report}" class="reportlist-form"
+            th:id="'reportlist-card-form-browse-' + ${report.reportId}"></form>
+          <form method="post" th:action="@{/report}" class="reportlist-form"
+            th:id="'reportlist-card-form-edit-' + ${report.reportId}"></form>
+          <form method="post" th:action="@{/report}" class="reportlist-form"
+            th:id="'reportlist-card-form-excel-' + ${report.reportId}"></form>
+        </div>
+      </div>
+
+      <!-- 一覧(PC表示時) -->
+      <div class="reportlist-table hide-on-mobile">
+        <!-- 明細：ヘッダー -->
+        <div class="reportlist-line">
+          <div class="reportlist-detail-identifer">#</div>
+          <div class="reportlist-detail-avatar"></div>
+          <div class="reportlist-detail-title" th:text="'タイトル'">Title</div>
+          <div class="reportlist-detail-create" th:text="'作成日'">Create At</div>
+          <div class="reportlist-detail-update" th:text="'更新日'">Update At</div>
+          <div class="reportlist-detail-endof" th:text="'エンド企業名'">End of company</div>
+          <div class="reportlist-detail-top" th:text="'上位顧客名'">Top company</div>
+          <div class="reportlist-detail-action">
+            <div class="reportlist-detail-action1">Action1</div>
+            <div class="reportlist-detail-action2">Action2</div>
+            <div class="reportlist-detail-action2">Action3</div>
+          </div>
+        </div>
+
+        <!-- 明細：項目 -->
+        <div class="reportlist-line" th:each="report : ${reportlist}">
+          <div class="reportlist-detail-identifer" th:text="${report.reportId}">1</div>
+          <div class="reportlist-detail-avatar avatar"><img th:src="@{/img/avatar/meme2.png}"
+              src="../static/img/avatar/meme2.png" alt="" /></div>
+          <div class="reportlist-detail-title" th:text="${report.title}">業務報告2024年05月</div>
+          <div class="reportlist-detail-create">
+            <div th:text="${#temporals.format(report.createAt, 'yyyy-MM-dd')}">2024-05-01</div>
+            <div th:text="${#temporals.format(report.createAt, 'hh:mm:ss')}">23:59:59</div>
+          </div>
+          <div class="reportlist-detail-update">
+            <div th:text="${#temporals.format(report.updateAt, 'yyyy-MM-dd')}">2024-05-01</div>
+            <div th:text="${#temporals.format(report.updateAt, 'hh:mm:ss')}">23:59:59</div>
+          </div>
+          <!-- <div class="reportlist-detail-create" th:text="${#temporals.format(report.createAt, 'yyyy-MM-dd hh:mm:ss')}">2024-05-01</div> -->
+          <!-- <div class="reportlist-detail-update" th:text="${#temporals.format(report.updateAt, 'yyyy-MM-dd hh:mm:ss')}">2024-05-31</div> -->
+          <div class="reportlist-detail-endof" th:text="${report.endCompany}">メブラルタ生命保険</div>
+          <div class="reportlist-detail-top" th:text="${report.topCompany}">メイホウシステムサイエンス</div>
+          <div class="reportlist-detail-action">
+            <button type="submit" class="reportlist-detail-action1 btn-small" name="reportBrowse" id="reportBrowse"
+              th:value="${report.reportId}" th:form="'reportlist-card-form-browse-' + ${report.reportId}" th:text="'参照'">Browse</button>
+            <button type="submit" class="reportlist-detail-action2 btn-small" name="reportEdit" id="reportEdit"
+              th:value="${report.reportId}" th:form="'reportlist-card-form-edit-' + ${report.reportId}" th:text="'編集'">Edit</button>
+            <button type="submit" class="reportlist-detail-action3 btn-small" name="reportExcel" id="reportExcel"
+              th:value="${report.reportId}" th:form="'reportlist-card-form-excel-' + ${report.reportId}" th:text="'Excel出力'">Excel</button>
+          </div>
+          <form method="post" th:action="@{/report}" class="reportlist-form"
+            th:id="'reportlist-card-form-browse-' + ${report.reportId}"></form>
+          <form method="post" th:action="@{/report}" class="reportlist-form"
+            th:id="'reportlist-card-form-edit-' + ${report.reportId}"></form>
+          <form method="post" th:action="@{/report}" class="reportlist-form"
+            th:id="'reportlist-card-form-excel-' + ${report.reportId}"></form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script th:src="@{/static/js/main.js}" src="../static/js/main.js"></script>
+</body>
+
+</html>

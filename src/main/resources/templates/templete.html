@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>業務報告書</title>
+  <link rel="stylesheet" th:href="@{/css/reset.css}" href="../static/css/reset.css" />
+  <link rel="stylesheet" th:href="@{/css/base.css}" href="../static/css/base.css" />
+  <link rel="stylesheet" th:href="@{/css/templete.css}" href="../static/css/templete.css" />
+  <link rel="stylesheet" th:href="@{/css/header.css}" href="../static/css/header.css" />
+  <link rel="stylesheet" th:href="@{/css/reportList.css}" href="../static/css/reportList.css" />
+  <link rel="stylesheet" th:href="@{/css/footer.css}" href="../static/css/footer.css" />
+  <link rel="stylesheet" th:href="@{/css/reportForm.css}" href="../static/css/reportForm.css" />
+  <link rel="icon" th:href="@{/img/favicon.ico}" href="../static/img/favicon.ico" />
+</head>
+
+<body>
+  <!-- <div th:text="'showReportList: ' + ${showReportList}">showReportList</div> -->
+  <!-- <div th:text="'showReportForm: ' + ${showReportForm}">showReportForm</div> -->
+  <div class="pancake">
+    <th:block id="header" th:replace="~{header :: header}"></th:block>
+    <th:block id="main" th:replace="~{main :: main}"></th:block>
+    <th:block id="footer" th:replace="~{footer :: footer}"></th:block>
+  </div>
+  <script th:src="@{/static/js/main.js}" src="../static/js/main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,560 @@
+@charset "utf-8";
+
+/*-------------------------------------------------------
+ * 全体
+ *-----------------------------------------------------*/
+.pancake {
+  /* ヘッダー、メイン、フッターの3行のグリッド */
+  display: grid;
+  grid-template-areas:
+    "header"
+    "main"
+    "footer";
+  grid-template-columns: minmax(0, auto);
+  grid-template-rows: auto 1fr auto;
+
+  /* ヘッダー、フッターの表示位置を固定にするため、ビューポートの規定高さにする */
+  height: 100svh;
+
+  /* ヘッダー */
+  >.header {
+    grid-area: header;
+  }
+
+  /* メイン */
+  >.main {
+    grid-area: main;
+    /* スクロールバー自動表示(ヘッダー、フッターは表示位置固定にするため) */
+    overflow-y: auto;
+    /* 背景色：黒色の不透明度2% */
+    background-color: rgb(0 0 0 / 2%);
+  }
+
+  /* フッター */
+  >.footer {
+    grid-area: footer;
+  }
+}
+
+/*-------------------------------------------------------
+ * ヘッダー
+ *-----------------------------------------------------*/
+.header {
+  /* 2列(明示的なグリッド) */
+  display: grid;
+  grid-template-columns: auto 1fr;
+
+  /* 暗黙的なグリッド列が増えるようにする */
+  grid-auto-flow: column;
+
+  /* グリッドの行列間の余白 */
+  gap: 1.0em;
+
+  /* パディング 上下左右 */
+  padding: 0.5em;
+
+  /* 縦方向の位置 */
+  align-items: center;
+
+  /* タップターゲットを拡張 */
+  .action,
+  .nav a {
+    padding: 12px;
+  }
+}
+
+/*-------------------------------------------------------
+ * フッダー
+ *-----------------------------------------------------*/
+.footer {
+  text-align: center;
+  padding: 15px;
+}
+
+/*-------------------------------------------------------
+ * 業務報告書一覧(全体)
+ *-----------------------------------------------------*/
+.reportlist {
+  /* 1行目：ヘッダー、新規作成ボタン  2行目：一覧 */
+  display: grid;
+  grid-template-areas:
+    ". . header button . ."
+    ". . table table . .";
+  grid-template-columns: repeat(auto-fill, 1fr);
+  /* grid-template-rows: auto; */
+
+  /* グリッド行間の余白 */
+  row-gap: 1.0em;
+
+  /* パディング 上 左右 下 */
+  padding: 1.0em 0 2.0em;
+
+  /* タイトル */
+  >.reportlist-title {
+    grid-area: header;
+  }
+
+  /* 新規作成ボタン */
+  >.reportlist-add-btn {
+    grid-area: button;
+    justify-self: right;
+    align-self: center;
+  }
+
+  /* 明細 */
+  >.reportlist-table {
+    grid-area: table;
+  }
+}
+
+/*-------------------------------------------------------
+ * 業務報告書一覧(タイトル、新規作成ボタン)
+ *-----------------------------------------------------*/
+/* タイトル(左寄寄せ) */
+.reportlist-title {
+  justify-self: left;
+  font-size: 2.0em;
+}
+
+/* 新規作成ボタン(右寄せ) */
+.reportlist-add-btn {
+  justify-self: right;
+}
+
+/*-------------------------------------------------------
+ * 業務報告書一覧(明細全体)
+ *-----------------------------------------------------*/
+.reportlist-table {
+  /* テキスト：中央揃え */
+  text-align: center;
+
+  /* フォントサイズ：小 */
+  font-size: small;
+
+  /* 背景色：白色 */
+  background-color: #fff;
+
+  /* ボーダー：角丸く、影付き */
+  border-radius: 5px;
+  box-shadow: 0 1px 4px -1px rgb(0 0 0 / 20%);
+
+  /* max-height: 100%; */
+  /* height: 100%; */
+}
+
+/*-------------------------------------------------------
+ * 業務報告書一覧(明細行)
+ *-----------------------------------------------------*/
+.reportlist-line {
+  /* 24トラック列 */
+  display: grid;
+  grid-template-columns: repeat(24, 1fr);
+
+  /* パディング 上下 左右 */
+  padding: 0 1.5em;
+
+  /* 中央揃え */
+  justify-self: center;
+
+  /* 明細項目(ID, アバター) */
+  .reportlist-detail-identifer,
+  .reportlist-detail-avatar {
+    /* 1トラック分割り当て */
+    grid-column: span 1;
+  }
+
+  /* 明細項目(アクションボタン) */
+  .reportlist-detail-action1,
+  .reportlist-detail-action2 {
+    /* 2トラック分割り当て */
+    grid-column: span 2;
+  }
+
+  /* 明細項目(作成日, 更新日) */
+  .reportlist-detail-create,
+  .reportlist-detail-update {
+    /* 3トラック分割り当て */
+    grid-column: span 3;
+  }
+
+  /* 明細項目(タイトル, エンド企業名, 上位企業名) */
+  .reportlist-detail-title,
+  .reportlist-detail-endof,
+  .reportlist-detail-top {
+    /* 4トラック分割り当て */
+    grid-column: span 4;
+  }
+}
+
+/* 明細行(ヘッダーを除く) */
+.reportlist-form {
+
+  /* ボーダー：上 */
+  >.reportlist-line {
+    [class^="reportlist-detail-"] {
+      border-top: 1px solid #ccc;
+    }
+  }
+
+  /* ホバー時のアニメーション */
+  .reportlist-line:hover {
+    transition: all 1.0s;
+    background-color: #dbfcf1;
+  }
+}
+
+/* 明細項目 */
+[class^="reportlist-detail-"] {
+  /* パディング 上下 左右 */
+  padding: 1.5em 0;
+}
+
+/* .reportlist-detail-action1,
+.reportlist-detail-action2 {
+  button:hover {
+    color: red;
+    opacity: 0.5;
+  }
+} */
+
+/*-------------------------------------------------------
+ * 業務報告書一覧(全体)：モバイル表示
+ *-----------------------------------------------------*/
+.reportlist-mobile {
+  display: grid;
+  grid-template:
+    "button" auto
+    "cards" 1fr
+    / auto;
+
+  /* パディング 上下 左右 */
+  /* padding: 2.0em 0; */
+
+  /* グリッドの行列間の余白 */
+  /* row-gap: 3.0em;
+  column-gap: 0.1em; */
+
+  /* 中央揃え */
+  /* justify-items: center; */
+
+  >.reportlist-add-btn {
+    grid-area: button;
+    align-self: center;
+    padding: 1.5em 1.0em;
+  }
+
+  >.reportlist-cards {
+    grid-area: cards;
+  }
+}
+
+/*-------------------------------------------------------
+ * 業務報告書一覧(明細全体)：モバイル表示(カードスタイル)
+ *-----------------------------------------------------*/
+.reportlist-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+
+  /* パディング 上下 左右 */
+  /* padding: 2.0em 0; */
+
+  /* グリッドの行列間の余白 */
+  row-gap: 3.0em;
+  column-gap: 0.1em;
+
+  /* 中央揃え */
+  justify-items: center;
+}
+
+/*-------------------------------------------------------
+ * 業務報告書一覧(明細)：モバイル表示(カードスタイル)
+ *-----------------------------------------------------*/
+.reportlist-card {
+  /* 9行のグリッド */
+  display: grid;
+
+  /* 行サイズ： 1fr 8px auto auto 8px auto 8px auto 8px auto 8px */
+  /* 列サイズ： 8px auto 8px 1fr 8px */
+  grid-template:
+    "photo photo photo photo photo" 1fr
+    ". . . . ." 0.5em
+    ". avatar . title ." auto
+    ". avatar . overview ." auto
+    ". . . . ." 0.5em
+    ". action1 action1 action1 ." auto
+    ". . . . ." 0.5em
+    ". action2 action2 action2 ." auto
+    ". . . . ." 0.5em
+    / 1.0em auto 1.0em 1fr 1.0em;
+
+  /* 行トラック確定処理から画像を除隊 */
+  >.reportlist-card-photo {
+    height: 0;
+    min-height: 100%;
+  }
+
+  /* 画像 */
+  >.reportlist-card-photo {
+    grid-area: photo;
+  }
+
+  /* タイトル */
+  >.reportlist-card-title {
+    grid-area: title;
+  }
+
+  /* 概要 */
+  >.reportlist-card-overview {
+    grid-area: overview;
+  }
+
+  /* アバター */
+  >.avatar {
+    grid-area: avatar;
+    align-self: center;
+  }
+
+  >.reportlist-card-action1 {
+    grid-area: action1;
+    width: auto;
+  }
+
+  >.reportlist-card-action2 {
+    grid-area: action2;
+    width: auto;
+  }
+}
+
+/* カードの形状 */
+.reportlist-card {
+  width: 350px;
+  height: 350px;
+  overflow: hidden;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px -1px rgb(0 0 0 / 20%);
+}
+
+/* 画像を配置先に合わせたサイズにして切り抜く */
+.img-fill {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* タイトルのスタイル */
+.reportlist-card-title {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+/* サブタイトルのスタイル */
+.reportlist-card-overview {
+  font-size: 0.8rem;
+  color: #ccc;
+}
+
+/* リンクボタンスタイル */
+.reportlist-card-action1,
+.reportlist-card-action2 {
+  text-align: center;
+  border-radius: 0%;
+  box-shadow: none;
+  border-top: 1px solid #ccc;
+  padding: 0.5em 0;
+
+  & a {
+    display: block;
+    text-decoration: none;
+    color: #4f96f6;
+    margin: 0 10px;
+  }
+
+}
+
+/* アバターのスタイル */
+.avatar img {
+  width: 40px;
+  height: 40px;
+  background-color: #f1f5f9;
+  border: solid 1px #cbd5e1;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* アバターのユーザー名 */
+.username {
+  font-size: small;
+}
+
+/*-------------------------------------------------------
+ * モーダル(全体)
+ *-----------------------------------------------------*/
+.modal-dialog {
+  /* 相対位置 */
+  position: relative;
+  /* フォントサイズ：小 */
+  font-size: small;
+  /* 背景色：白色 */
+  background-color: #fff;
+  /* ボーダー：角丸く、影付き */
+  border-radius: 10px;
+  box-shadow: 0 1px 4px -1px rgb(0 0 0 / 20%);
+  /* max-height: 100%; */
+  /* 余白 */
+  padding: 2.0em 3.0em;
+
+  overflow-y: hidden;
+  overflow-x: hidden;
+
+  @media (width <=960px) {
+    padding: 2.0em 1.0em;
+  }
+}
+
+/* モーダルを開く時のアニメーション提示 */
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* モーダルを開くときのアニメーション実行 */
+.modal-dialog[open] {
+  animation-name: modalFadeIn;
+  animation-fill-mode: forwards;
+  animation-duration: 200ms;
+  animation-timing-function: ease-out;
+}
+
+/* モーダルの背景ぼかし */
+.modal-dialog::backdrop {
+  background: rgba(163, 212, 226, 0.32);
+  backdrop-filter: blur(100px);
+}
+
+/* 閉じる「×」ボタンの要素全体 */
+.modal-dialog-close-btn {
+  position: relative;
+  width: auto;
+  height: auto;
+  /* width: 30px;
+    height: 30px; */
+}
+
+/* 閉じる「×」ボタンのスタイル */
+.modal-dialog-close-btn::before,
+.modal-dialog-close-btn::after {
+  /* ボーダーで「×」を描画するため要素は空を設定 */
+  content: "";
+  /* 「×」ボタンを真ん中に表示 */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  /* 「×」ボタンの太さ */
+  width: 3px;
+  /* 「×」ボタンの高さ */
+  height: 25px;
+  /* 「×」ボタンの色 */
+  background-color: #333;
+}
+
+/* 「×」ボタンの描画 */
+.modal-dialog-close-btn::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.modal-dialog-close-btn::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+/*-------------------------------------------------------
+ * 入力フォーム
+ *-----------------------------------------------------*/
+.report-input-form {
+  display: grid;
+  grid-template:
+    "header" auto
+    "fields" auto
+    /* "button" auto */
+    / minmax(auto, 50em);
+
+  row-gap: 2.0em;
+
+  /* height: 100svh; */
+
+  >.report-input-header {
+    grid-area: header;
+  }
+
+  >.report-input-fields {
+    grid-area: fields;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  /* >.report-input-submit-btn {
+    grid-area: button;
+  } */
+
+}
+
+/* 入力フォームのタイトルと「×」ボタン 2列 */
+.report-input-header {
+  display: grid;
+  grid-template-columns: 95% 5%;
+
+  font-size: 2.0em;
+  font-weight: bold;
+  border-bottom: 1px solid #ccc;
+}
+
+/* 入力フォーム 1列 */
+.report-input-field {
+  display: grid;
+  grid-template-columns: subgrid;
+  padding: 0 2.0em 2.0em;
+  /* padding-bottom: 2.0em; */
+
+  /* 対象期間 3列(開始, 「-」, 終了) */
+  >.report-input-period-field {
+    display: grid;
+    grid-template-columns: auto 5% auto;
+    text-align: center;
+    align-items: center;
+  }
+
+  /* プロジェクト 1列 */
+  >.report-input-project-field {
+    display: grid;
+    grid-template-columns: subgrid;
+    padding-left: 1.0em;
+
+    >label {
+      padding-top: 1.0em;
+    }
+  }
+}
+
+/* ラベル装飾 */
+.labelDecorate {
+  /* border-left: solid 3px #86a2ee; */
+  /* padding-left: 0.5em; */
+  margin-bottom: 0.5em;
+  font-weight: bold;
+}
+
+/* ラベルに付加する必須マーク生成 */
+.requiredMark::after {
+  content: "必須";
+  background-color: #f00;
+  color: #fff;
+  font-size: x-small;
+  border-radius: 5px;
+  padding: 0.1em 0.5em;
+  margin-left: 1.0em;
+}
