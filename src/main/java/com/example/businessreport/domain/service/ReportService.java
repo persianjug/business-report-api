@@ -1,46 +1,46 @@
 package com.example.businessreport.domain.service;
 
-import java.io.OutputStream;
 import java.util.List;
 
-import com.example.businessreport.domain.dto.ReportFull;
-import com.example.businessreport.domain.model.Report;
-import com.example.businessreport.domain.model.WorkDetail;
-import com.example.businessreport.web.form.ReportForm;
+import com.example.businessreport.domain.dto.DetailFull;
+import com.example.businessreport.domain.model.Detail;
 
 /**
- * 報告書作成サービス インタフェース
+ * 業務報告書サービス インタフェース
  */
 public interface ReportService {
 
-  List<ReportFull> findReportFullAll();
+    /**
+     * 全ての業務報告書（Full）を取得します。
+     * @return 業務報告書（Full）のリスト
+     */
+    List<DetailFull> findAllReports();
 
-  ReportFull findReportFullById(Integer id);
+    /**
+     * 指定されたIDの業務報告書（Full）を取得します。
+     * @param reportId 業務報告書ID
+     * @return 業務報告書（Full）データ
+     */
+    DetailFull findReportById(Integer reportId);
 
-  ReportFull findReportFullLatest();
+    /**
+     * 最新の業務報告書（Full）を取得します。
+     * @return 最新の業務報告書（Full）データ
+     */
+    DetailFull findLatestReport();
+        
 
-  WorkDetail findWorkDetailById(Integer reportId, Integer workDetailId);
-  
-  ReportFull mapFormToReportFull(ReportForm form);
+    /**
+     * 業務報告書を新規作成します。
+     * @param detail 作成する業務報告書エンティティ
+     * @return 作成成功の場合true、失敗の場合false
+     */
+    boolean createReport(Detail detail);
 
-  ReportForm mapReportFullToForm(ReportFull reportFull);
-
-  Report mapFormToReport(ReportForm form);
-  
-  boolean createReport(Report report);
-  
-  boolean createWorkDetail(WorkDetail WorkDetail);
-
-  boolean createWorkDetailAll(List<WorkDetail> WorkDetails, Integer reportId);
-
-  boolean updateReport(Report report);
-  
-  boolean updateWorkDetail(WorkDetail WorkDetail);
-
-  boolean updateWorkDetailAll(List<WorkDetail> WorkDetails, Integer reportId);
-
-  boolean createReportExcelFile(ReportFull reportFull, String path);
-
-  boolean createReportExcelFile(ReportFull reportFull, OutputStream stream);
-
+    /**
+     * 業務報告書を更新します。
+     * @param detail 更新する業務報告書エンティティ
+     * @return 更新成功の場合true、失敗の場合false
+     */
+    boolean updateReport(Detail detail);
 }

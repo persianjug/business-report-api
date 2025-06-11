@@ -12,68 +12,67 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-import com.example.businessreport.domain.dto.ReportFull;
-import com.example.businessreport.domain.helper.ErrorUtil;
-import com.example.businessreport.domain.model.Report;
+import com.example.businessreport.domain.dto.DetailFull;
+import com.example.businessreport.domain.dto.form.DetailForm;
+import com.example.businessreport.domain.dto.form.ReportForm;
+import com.example.businessreport.domain.helper.ErrorUtilV1;
+import com.example.businessreport.domain.model.Detail;
 import com.example.businessreport.domain.model.WorkDetail;
-import com.example.businessreport.domain.service.ReportService;
-import com.example.businessreport.domain.service.impl.ReportServiceImpl;
-import com.example.businessreport.web.form.ReportForm;
+import com.example.businessreport.domain.service.impl.DetailServiceImpl;
 
-@RestController
+// @RestController
 @RequestMapping("/api")
-public class ReportApiController {
+public class DetailApiController {
 
   // 業務報告書サービス
-  private ReportService reportService;
+  private DetailServiceImpl detailService;
 
   // コンストラクタ(サービスをBean登録)
   @Autowired
-  public ReportApiController(ReportServiceImpl reportService) {
-    this.reportService = reportService;
+  public DetailApiController(DetailServiceImpl detailService) {
+    this.detailService = detailService;
   }
 
   // 業務報告書データを全件取得
   @GetMapping("/reports")
   public ResponseEntity<?> getAllReports() {
-    List<ReportFull> reportFull = reportService.findReportFullAll();
+    List<DetailFull> reportFull = detailService.findDetailFullAll();
     return new ResponseEntity<>(reportFull, (reportFull != null ? HttpStatus.OK : HttpStatus.NOT_FOUND));
   }
   
   // 業務報告書データを取得
   @GetMapping("/report/{reportId}")
   public ResponseEntity<?> getReport(@PathVariable Integer reportId) {
-    ReportFull reportFull = reportService.findReportFullById(reportId);
+    DetailFull reportFull = detailService.findDetailFullById(reportId);
     return new ResponseEntity<>(reportFull, (reportFull != null ? HttpStatus.OK : HttpStatus.NOT_FOUND));
   }
 
   // 作業内容データを取得
   @GetMapping("/workdetail/{reportId}/{workDetailId}")
   public ResponseEntity<?> getWorkdetail(@PathVariable Integer reportId, @PathVariable Integer workDetailId) {
-    WorkDetail workDetail = reportService.findWorkDetailById(reportId, workDetailId);
+    WorkDetail workDetail = detailService.findWorkDetailById(reportId, workDetailId);
     return new ResponseEntity<>(workDetail, (workDetail != null ? HttpStatus.OK : HttpStatus.NOT_FOUND));
   }
   
   // 報告書データ追加  
   @PostMapping("/report/create")
-  public ResponseEntity<?> createReport(@Validated @RequestBody ReportForm form, BindingResult result) {
+  public ResponseEntity<?> createReport(@Validated @RequestBody DetailForm form, BindingResult result) {
     // 入力チェック
     if (result.hasErrors()) {
-      return new ResponseEntity<>(ErrorUtil.getErrors(result), HttpStatus.BAD_REQUEST);
+      return new ResponseEntity<>(ErrorUtilV1.getErrors(result), HttpStatus.BAD_REQUEST);
     }
 
-    // 業務報告書 
-    Report report = reportService.mapFormToReport(form);
+    // 業務報告書
+    Detail detail = detailService.mapFormToDetail(form);
 
     // フォームを業務報告書データへマッピング
-    boolean resultReport = reportService.createReport(report);
+    boolean resultDetail = detailService.createDetail(detail);
 
     // 作業内容を登録
     boolean resultWorkDetails = false;
-    if (resultReport) {
-      resultWorkDetails = reportService.createWorkDetailAll(form.getWorkDetails(), report.getReportId());
+    if (resultDetail) {
+      resultWorkDetails = detailService.createWorkDetailAll(form.getWorkDetails(), detail.getReportId());
     }
 
     // 正常のレスポンス
@@ -83,22 +82,22 @@ public class ReportApiController {
   
   // 報告書データ更新  
   @PostMapping("/report/update")
-  public ResponseEntity<?> updateReport(@Validated @RequestBody ReportForm form, BindingResult result) {
+  public ResponseEntity<?> updateReport(@Validated @RequestBody DetailForm form, BindingResult result) {
     // 入力チェック
     if (result.hasErrors()) {
-      return new ResponseEntity<>(ErrorUtil.getErrors(result), HttpStatus.BAD_REQUEST);
+      return new ResponseEntity<>(ErrorUtilV1.getErrors(result), HttpStatus.BAD_REQUEST);
     }
 
     // フォームを業務報告書データへマッピング
-    Report report = reportService.mapFormToReport(form);
+    Detail detail = detailService.mapFormToDetail(form);
 
     // 業務報告書を更新
-    boolean resultReport = reportService.updateReport(report);
+    boolean resultDetail = detailService.updateDetail(detail);
 
     // 作業内容を更新
     boolean resultWorkDetails = false;
-    if (resultReport) {
-      resultWorkDetails = reportService.updateWorkDetailAll(form.getWorkDetails(), report.getReportId());
+    if (resultDetail) {
+      resultWorkDetails = detailService.updateWorkDetailAll(form.getWorkDetails(), detail.getReportId());
     }
 
     // 正常のレスポンス
@@ -144,7 +143,7 @@ public class ReportApiController {
     form = new ReportForm();
 
     if (result.hasErrors()) {
-      return new ResponseEntity<>(ErrorUtil.getErrors(result), HttpStatus.BAD_REQUEST);
+      return new ResponseEntity<>(ErrorUtilV1.getErrors(result), HttpStatus.BAD_REQUEST);
     }
 
     return null;

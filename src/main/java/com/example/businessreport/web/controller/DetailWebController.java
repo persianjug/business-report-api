@@ -26,11 +26,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.example.businessreport.domain.dto.ReportFull;
-import com.example.businessreport.domain.model.Report;
-import com.example.businessreport.domain.service.ReportService;
-import com.example.businessreport.web.form.ReportForm;
-import com.example.businessreport.web.helper.ReportUtil;
+import com.example.businessreport.domain.dto.DetailFull;
+import com.example.businessreport.domain.dto.form.DetailForm;
+import com.example.businessreport.domain.model.Detail;
+import com.example.businessreport.domain.service.impl.DetailServiceImpl;
+import com.example.businessreport.web.helper.DetailUtil;
 
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
@@ -38,17 +38,17 @@ import jakarta.servlet.http.HttpServletResponse;
 /**
  * 業務報告書作成 コントローラー
  */
-@Controller
-@RequestMapping
-public class ReportWebController {
+// @Controller
+// @RequestMapping
+public class DetailWebController {
 
   // 業務報告書サービス
-  private ReportService reportService;
+  private DetailServiceImpl detailService;
 
   // コンストラクタ(サービスをBean登録)
   @Autowired
-  public ReportWebController(ReportService reportService) {
-    this.reportService = reportService;
+  public DetailWebController(DetailServiceImpl detailService) {
+    this.detailService = detailService;
   }
 
   // フォームから入力された空文字をnullに変換する      
@@ -63,13 +63,13 @@ public class ReportWebController {
    * @return url 遷移先画面
    */
   @GetMapping("/report")
-  public String showReportList(Model model) {
+  public String showDetailList(Model model) {
     // 業務報告書データを全件取得
-    List<ReportFull> reportFull = reportService.findReportFullAll();
+    List<DetailFull> detailFull = detailService.findDetailFullAll();
 
     // 画面へオブジェクトを渡す
-    model.addAttribute("reportlist", reportFull);
-    model.addAttribute("reportShow", ReportUtil.getReportShow("list"));
+    model.addAttribute("reportlist", detailFull);
+    model.addAttribute("reportShow", DetailUtil.getDetailShow("list"));
 
     // 画面へ遷移
     return "templete";
@@ -82,10 +82,10 @@ public class ReportWebController {
    * @return 遷移先画面
    */
   @PostMapping(value = "/report", params = "reportAddOpen")
-  public String showReportCreate(Model model, @ModelAttribute ReportForm form) {
+  public String showDetailCreate(Model model, @ModelAttribute DetailForm form) {
 
     // 画面へオブジェクトを渡す
-    model.addAttribute("reportShow", ReportUtil.getReportShow("create"));
+    model.addAttribute("reportShow", DetailUtil.getDetailShow("create"));
 
     // 画面へ遷移
     return "templete";
@@ -98,13 +98,13 @@ public class ReportWebController {
    * @return 遷移先画面
    */
   @PostMapping(value = "/report", params = "reportBrowse")
-  public String showReportBrowse(Model model, @RequestParam("reportBrowse") String id) {
+  public String showDetailBrowse(Model model, @RequestParam("reportBrowse") String id) {
     // 業務報告書データを全件取得
-    ReportFull reportFull = reportService.findReportFullById(Integer.valueOf(id));
+    DetailFull detailFull = detailService.findDetailFullById(Integer.valueOf(id));
 
     // 画面へオブジェクトを渡す
-    model.addAttribute("reportFull", reportFull);
-    model.addAttribute("reportShow", ReportUtil.getReportShow("browse"));
+    model.addAttribute("reportFull", detailFull);
+    model.addAttribute("reportShow", DetailUtil.getDetailShow("browse"));
 
     // 画面へ遷移
     return "templete";
@@ -117,16 +117,16 @@ public class ReportWebController {
    * @return 遷移先画面
    */
   @PostMapping(value = "/report", params = "reportEdit")
-  public String showReportEdit(Model model, @RequestParam("reportEdit") String id) {
+  public String showDetailEdit(Model model, @RequestParam("reportEdit") String id) {
     // 業務報告書データを取得
-    ReportFull reportFull = reportService.findReportFullById(Integer.valueOf(id));
+    DetailFull detailFull = detailService.findDetailFullById(Integer.valueOf(id));
 
     // 業務報告書データをフォームへマッピング
-    ReportForm form = reportService.mapReportFullToForm(reportFull);
+    DetailForm form = detailService.mapDetailFullToForm(detailFull);
 
     // 画面へオブジェクトを渡す
     model.addAttribute("reportForm", form);
-    model.addAttribute("reportShow", ReportUtil.getReportShow("update"));
+    model.addAttribute("reportShow", DetailUtil.getDetailShow("update"));
 
     // 画面へ遷移
     return "templete";
@@ -138,9 +138,9 @@ public class ReportWebController {
    * @return 遷移先画面
    */
   @PostMapping(value = "/report", params = "reportFormClose")
-  public String closeReportAdd(Model model) {
+  public String closeDetailAdd(Model model) {
     // 業務報告書一覧画面を表示する
-    return showReportList(model);
+    return showDetailList(model);
   }
 
   /**
@@ -151,22 +151,21 @@ public class ReportWebController {
    * @return 遷移先画面
    */
   @PostMapping(value = "/report", params = "reportLatest")
-  public String importReportLatest(Model model, @ModelAttribute ReportForm form) {
+  public String importDetailLatest(Model model, @ModelAttribute DetailForm form) {
     // 業務報告書データ最新の1件を取得
-    ReportFull reportFull = reportService.findReportFullLatest();
+    DetailFull detailFull = detailService.findDetailFullLatest();
     // 報告書IDの新たに採番するため、クリア
-    reportFull.setReportId(null);
+    detailFull.setReportId(null);
     
     // 業務報告書データをフォームへマッピング
-    form = reportService.mapReportFullToForm(reportFull);
+    form = detailService.mapDetailFullToForm(detailFull);
     
     // 画面へオブジェクトを渡す
     model.addAttribute("reportForm", form);
 
     // 作成画面へ遷移
-    return showReportCreate(model, form);
+    return showDetailCreate(model, form);
   }
-
   
   
   /**
@@ -177,7 +176,7 @@ public class ReportWebController {
    * @return 遷移先画面
    */
   @PostMapping(value = "/report", params = "reportCreate")
-  public String createReport(Model model, @ModelAttribute @Validated ReportForm form, BindingResult result) {
+  public String createDetail(Model model, @ModelAttribute @Validated DetailForm form, BindingResult result) {
     // 入力チェック
     if (result.hasErrors()) {
 
@@ -191,24 +190,22 @@ public class ReportWebController {
       }
       
       System.out.println("errors: " + errors);
-
       
-      
-      model.addAttribute("reportShow", ReportUtil.getReportShow("create"));
+      model.addAttribute("reportShow", DetailUtil.getDetailShow("create"));
       model.addAttribute("errorMsgAll", "入力に誤りがあります。");
       return "templete";
     }
 
     // 業務報告書 
-    Report report = reportService.mapFormToReport(form);
+    Detail detail = detailService.mapFormToDetail(form);
 
     // 業務報告書を登録
-    boolean resultReport = reportService.createReport(report);
+    boolean resultDetail = detailService.createDetail(detail);
 
     // 作業内容を登録
     boolean resultWorkDetails = false;
-    if (resultReport) {
-      resultWorkDetails = reportService.createWorkDetailAll(form.getWorkDetails(), report.getReportId());
+    if (resultDetail) {
+      resultWorkDetails = detailService.createWorkDetailAll(form.getWorkDetails(), detail.getReportId());
     }
 
     // 一覧画面へリダイレクト
@@ -223,24 +220,24 @@ public class ReportWebController {
    * @return 遷移先画面
    */
   @PostMapping(value = "/report", params = "reportUpdate")
-  public String updateReport(Model model, @ModelAttribute @Validated ReportForm form, BindingResult result) {
+  public String updateDetail(Model model, @ModelAttribute @Validated DetailForm form, BindingResult result) {
     // 入力チェック
     if (result.hasErrors()) {
-      model.addAttribute("reportShow", ReportUtil.getReportShow("update"));
+      model.addAttribute("detailShow", DetailUtil.getDetailShow("update"));
       model.addAttribute("errorMsg  All", "入力に誤りがあります。");
       return "templete";
     }
 
     // フォームを業務報告書データへマッピング
-    Report report = reportService.mapFormToReport(form);
+    Detail detail = detailService.mapFormToDetail(form);
 
     // 業務報告書を更新
-    boolean resultReport = reportService.updateReport(report);
+    boolean resultDetail = detailService.updateDetail(detail);
 
     // 作業内容を更新
     boolean resultWorkDetails = false;
-    if (resultReport) {
-      resultWorkDetails = reportService.updateWorkDetailAll(form.getWorkDetails(), report.getReportId());
+    if (resultDetail) {
+      resultWorkDetails = detailService.updateWorkDetailAll(form.getWorkDetails(), detail.getReportId());
     }
 
     // 一覧画面へリダイレクト
@@ -255,9 +252,9 @@ public class ReportWebController {
    * @return 遷移先画面
    */
   @PostMapping(value = "/report", params = "reportExcel")
-  public void createExcelReport(@RequestParam("reportExcel") String id, HttpServletResponse response) {
+  public void createExcelDetail(@RequestParam("reportExcel") String id, HttpServletResponse response) {
     // 業務報告書データを取得
-    ReportFull reportFull = reportService.findReportFullById(Integer.valueOf(id));
+    DetailFull detailFull = detailService.findDetailFullById(Integer.valueOf(id));
 
     // 業務報告書のExcelファイル名作成
     String path = "業務報告書_" +
@@ -280,7 +277,7 @@ public class ReportWebController {
     }
     
     // 業務報告書のExcel作成
-    boolean resultExcel = reportService.createReportExcelFile(reportFull, stream);
+    boolean resultExcel = detailService.createDetailExcelFile(detailFull, stream);
   }
 
 }

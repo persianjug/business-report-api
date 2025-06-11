@@ -6,7 +6,10 @@ import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 
-public class CellStyleProtpery {
+/**
+ * セルスタイルのプロパティ設定
+*/
+public class CellStyleProperty {
   private CellStyle cellStyle;
   private Font font;
   private String fontFamily;
@@ -19,7 +22,7 @@ public class CellStyleProtpery {
   private short borderColor;
 
   // 標準のスタイル  
-  public CellStyleProtpery(
+  public CellStyleProperty(
       CellStyle cellStyle,
       Font font,
       String fontFamily,
@@ -45,7 +48,7 @@ public class CellStyleProtpery {
   }
 
   // 標準のスタイル  
-  public CellStyleProtpery(
+  public CellStyleProperty(
       CellStyle cellStyle,
       Font font,
       String fontFamily,
@@ -108,7 +111,7 @@ public class CellStyleProtpery {
     cellStyle.setTopBorderColor(borderColor);
     cellStyle.setBottomBorderColor(borderColor);
     cellStyle.setLeftBorderColor(borderColor);
-    cellStyle.setLeftBorderColor(borderColor);
+    cellStyle.setRightBorderColor(borderColor);
   }
 
   /**

@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import lombok.Data;
 
 @Data
-public class Report {
+public class Detail {
   // 報告書ID
   private Integer reportId;
 
@@ -39,9 +39,6 @@ public class Report {
 
   // 職場最寄り駅
   private String station;
-
-  // 通勤時間
-  private Double commutingTime;
 
   // 通勤時間（時）
   private Integer commutingTimeHour;

@@ -1,4 +1,4 @@
-package com.example.businessreport.web.validator;
+package com.example.businessreport.domain.validator;
 
 import java.time.LocalDate;
 

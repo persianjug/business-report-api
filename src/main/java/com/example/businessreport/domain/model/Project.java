@@ -6,7 +6,7 @@ import lombok.Data;
 public class Project {
   // ID
   private Integer projectId;
-  
+
   // 報告書ID
   private Integer reportId;
 

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper
-  namespace="com.example.businessreport.domain.mapper.ReportMapper">
-  <!-- 業務報告書 ResultMap -->
-  <resultMap id="reportResultMap"
-    type="com.example.businessreport.domain.model.Report">
+  namespace="com.example.businessreport.domain.mapper.DetailMapper">
+  <!-- 業務報告書データ ResultMap -->
+  <resultMap id="detailResultMap"
+    type="com.example.businessreport.domain.model.Detail">
     <id column="reportId" property="reportId" />
     <result column="title" property="title" />
     <result column="periodStart" property="periodStart" />
@@ -17,6 +17,8 @@
     <result column="workingStyle" property="workingStyle" />
     <result column="station" property="station" />
     <result column="commutingTime" property="commutingTime" />
+    <result column="commutingTimeHour" property="commutingTimeHour" />
+    <result column="commutingTimeMinute" property="commutingTimeMinute" />
     <result column="participantDate" property="participantDate" />
     <result column="mainTechnology" property="mainTechnology" />
     <result column="database" property="database" />
@@ -31,7 +33,7 @@
     <result column="updateAt" property="updateAt" />
   </resultMap>
 
-  <!-- 作業内容 ResultMap -->
+  <!-- 作業内容データ ResultMap -->
   <resultMap id="workDetailResultMap"
     type="com.example.businessreport.domain.model.WorkDetail">
     <id column="workDetailId" property="workDetailId" />
@@ -42,8 +44,8 @@
   </resultMap>
 
   <!-- 業務報告書(full) resultMap -->
-  <resultMap id="reportFullResultMap"
-    type="com.example.businessreport.domain.dto.ReportFull">
+  <resultMap id="detailFullResultMap"
+    type="com.example.businessreport.domain.dto.DetailFull">
     <id column="reportId" property="reportId" />
     <result column="title" property="title" />
     <result column="periodStart" property="periodStart" />
@@ -56,6 +58,8 @@
     <result column="workingStyle" property="workingStyle" />
     <result column="station" property="station" />
     <result column="commutingTime" property="commutingTime" />
+    <result column="commutingTimeHour" property="commutingTimeHour" />
+    <result column="commutingTimeMinute" property="commutingTimeMinute" />
     <result column="participantDate" property="participantDate" />
     <result column="mainTechnology" property="mainTechnology" />
     <result column="database" property="database" />
@@ -79,13 +83,13 @@
   </resultMap>
 
   <!-- 業務報告書(Full)1件取得 -->
-  <select id="findReportFullById" parameterType="integer"
-    resultMap="reportFullResultMap">
+  <select id="findDetailFullById" parameterType="integer"
+    resultMap="detailFullResultMap">
     SELECT
       rp.*
      ,wk.*
     FROM
-      report rp
+      detail rp
     LEFT OUTER JOIN
       workdetail wk
     ON
@@ -95,12 +99,12 @@
   </select>
 
   <!-- 業務報告書(Full)全件取得 -->
-  <select id="findReportFullAll" resultMap="reportFullResultMap">
+  <select id="findDetailFullAll" resultMap="detailFullResultMap">
     SELECT
 	    rp.*
 	   ,wk.*
     FROM
-      report rp
+      detail rp
     LEFT OUTER JOIN
       workdetail wk
     ON
@@ -121,12 +125,12 @@
   </select>
 
   <!-- 業務報告書(Full)最新の1件取得 -->
-  <select id="findReportFullLatest" resultMap="reportFullResultMap">
+  <select id="findDetailFullLatest" resultMap="detailFullResultMap">
     SELECT
       rp.*
      ,wk.*
     FROM
-      report rp
+      detail rp
     LEFT OUTER JOIN
       workdetail wk
     ON
@@ -138,9 +142,9 @@
 
 
   <!-- 業務報告書 追加 -->
-  <insert id="createReport" parameterType="com.example.businessreport.domain.model.Report" useGeneratedKeys="true" keyProperty="reportId">
+  <insert id="createDetail" parameterType="com.example.businessreport.domain.model.Detail" useGeneratedKeys="true" keyProperty="reportId">
     INSERT INTO
-    report(
+    detail(
       title
       ,periodStart
       ,periodEnd
@@ -152,6 +156,8 @@
       ,workingStyle
       ,station
       ,commutingTime
+      ,commutingTimeHour
+      ,commutingTimeMinute
       ,participantDate
       ,mainTechnology
       ,database
@@ -191,6 +197,8 @@
       ,#{workingStyle}
       ,#{station}
       ,#{commutingTime}
+      ,#{commutingTimeHour}
+      ,#{commutingTimeMinute}
       ,#{participantDate}
       ,#{mainTechnology}
       ,#{database}
@@ -206,8 +214,8 @@
     )
   </insert>
 
-  <update id="updateReport" parameterType="com.example.businessreport.domain.model.Report">
-    UPDATE report SET
+  <update id="updateDetail" parameterType="com.example.businessreport.domain.model.Detail">
+    UPDATE detail SET
       title =
         CONCAT(
           '業務報告書 '
@@ -234,6 +242,8 @@
       ,workingStyle = #{workingStyle}
       ,station = #{station}
       ,commutingTime = #{commutingTime}
+      ,commutingTimeHour = #{commutingTimeHour}
+      ,commutingTimeMinute = #{commutingTimeMinute}
       ,participantDate = #{participantDate}
       ,mainTechnology = #{mainTechnology}
       ,database = #{database}

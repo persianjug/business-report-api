@@ -1,4 +1,4 @@
-package com.example.businessreport.web.form;
+package com.example.businessreport.domain.dto.form;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -7,7 +7,7 @@ import java.util.List;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.example.businessreport.domain.model.WorkDetail;
-import com.example.businessreport.web.validator.RangeOfStartDateAndEndDate;
+import com.example.businessreport.domain.validator.RangeOfStartDateAndEndDate;
 
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
@@ -15,7 +15,7 @@ import lombok.Data;
 
 @Data
 @RangeOfStartDateAndEndDate(startDate = "periodStart", endDate = "periodEnd")
-public class ReportForm {
+public class DetailForm {
   // 報告書ID
   private Integer reportId;
   

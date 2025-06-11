@@ -3,13 +3,13 @@ package com.example.businessreport.web.helper;
 import lombok.Data;
 
 @Data
-public class ReportShow {
+public class DetailShow {
   private boolean showReportList;
   private boolean showReportCreate;
   private boolean showReportBrowse;
   private boolean showReportUpdate;
 
-  public ReportShow(
+  public DetailShow(
       boolean showReportList,
       boolean showReportCreate,
       boolean showReportBrowse,

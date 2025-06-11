@@ -1,12 +1,15 @@
-package com.example.businessreport.domain.model;
+package com.example.businessreport.domain.dto;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
+
+import com.example.businessreport.domain.model.WorkDetail;
 
 import lombok.Data;
 
 @Data
-public class Report {
+public class DetailFull {
   // 報告書ID
   private Integer reportId;
 
@@ -34,7 +37,7 @@ public class Report {
   // 参画人数
   private Integer participantPeple;
 
-  // 職場形態
+  // 勤務形態
   private String workingStyle;
 
   // 職場最寄り駅
@@ -42,12 +45,6 @@ public class Report {
 
   // 通勤時間
   private Double commutingTime;
-
-  // 通勤時間（時）
-  private Integer commutingTimeHour;
-
-  // 通勤時間（分）
-  private Integer commutingTimeMinute;
 
   // 案件参画日
   private LocalDate participantDate;
@@ -63,6 +60,9 @@ public class Report {
 
   // 全体状況
   private String fullSituation;
+
+  // 作業内容
+  private List<WorkDetail> workDetails;
   
   // 今後の予定
   private String futurePlan;
